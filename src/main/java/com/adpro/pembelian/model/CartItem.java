@@ -12,10 +12,10 @@ public class CartItem {
     private double price;
 
     public void setQuantity(int quantity) {
-        validateQuantity();
+        validateQuantity(quantity);
         this.quantity = quantity;
     }
-    public void validateQuantity(){
+    public void validateQuantity(int quantity){
         if(quantity <=0) throw new IllegalArgumentException("Cart Item tidak boleh kosong");
     }
     public double calculateTotalPrice() {
