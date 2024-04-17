@@ -1,8 +1,6 @@
 package com.adpro.pembelian.model;
-import com.adpro.pembelian.service.PricingStrategy;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class CartItemTest {
     @Test
@@ -11,16 +9,9 @@ public class CartItemTest {
         CartItem cartItem = new CartItem();
         cartItem.setProductId("123");
         cartItem.setQuantity(3);
-
-        PricingStrategy<CartItem> pricingStrategy = mock(PricingStrategy.class);
-
-        when(pricingStrategy.calculateTotalPrice(cartItem)).thenReturn(30.0);
-
-        cartItem.setPricingStrategy(pricingStrategy);
-
+        cartItem.setPrice(2000);
         double totalPrice = cartItem.calculateTotalPrice();
-
-        assertEquals(30.0, totalPrice);
+        assertEquals(6000, totalPrice);
     }
 
     @Test

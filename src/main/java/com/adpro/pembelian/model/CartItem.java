@@ -1,5 +1,4 @@
 package com.adpro.pembelian.model;
-import com.adpro.pembelian.service.PricingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,21 +9,17 @@ public class CartItem {
     private String productId;
     private String name;
     private int quantity;
-    private PricingStrategy<CartItem> pricingStrategy;
+    private double price;
 
     public void setQuantity(int quantity) {
-        validateQuantity(quantity);
+        validateQuantity();
         this.quantity = quantity;
     }
-
-    public void validateQuantity(int quantity){
+    public void validateQuantity(){
         if(quantity <=0) throw new IllegalArgumentException("Cart Item tidak boleh kosong");
     }
-
-
-
     public double calculateTotalPrice() {
-        return pricingStrategy.calculateTotalPrice(this);
+        return price * quantity;
     }
 }
 
