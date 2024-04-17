@@ -13,8 +13,12 @@ public class CartItem {
     private PricingStrategy<CartItem> pricingStrategy;
 
     public void setQuantity(int quantity) {
-        if(quantity <=0) throw new IllegalArgumentException("Cart Item tidak boleh kosong");
+        validateQuantity(quantity);
         this.quantity = quantity;
+    }
+
+    public void validateQuantity(int quantity){
+        if(quantity <=0) throw new IllegalArgumentException("Cart Item tidak boleh kosong");
     }
 
 
