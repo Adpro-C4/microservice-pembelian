@@ -14,11 +14,11 @@ public class ShoppingCart {
     ShoppingCart(){
         this.cartItemMap = new HashMap<>();
     }
-    public CartItem addItem(CartItem item){
-        cartItemMap.put(item.getProductId(), item);
-        return item;
+    public CartItem addItem(CartItem cartItem){
+        cartItemMap.put(cartItem.getProductId(), cartItem);
+        return cartItem;
     }
-    public void deleteItem(CartItem item){
-        cartItemMap.remove(item.getProductId());
+    public void deleteItem(CartItem cartItem){
+        cartItemMap.remove(cartItem.getProductId());
     }
 }
