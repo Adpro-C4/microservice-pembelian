@@ -1,8 +1,5 @@
 package com.adpro.pembelian.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +14,11 @@ public class CartItem {
     private String name;
     private int quantity;
     private double price;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private ShoppingCart shoppingCart;
+
 
     public CartItem(){}
     public CartItem(Long id, String productId, String name, int quantity, double price){
