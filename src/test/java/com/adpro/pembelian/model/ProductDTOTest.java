@@ -3,12 +3,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
-public class ProductTest {
+public class ProductDTOTest {
 
     @Test
     public void testProductGetterSetter() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         String productId = "123";
         String productName = "Test Product";
         String productDescription = "This is a test product";
@@ -17,88 +17,88 @@ public class ProductTest {
         String productThumbnail = "test_thumbnail.jpg";
 
         // Act
-        product.setProductId(productId);
-        product.setProductName(productName);
-        product.setProductDescription(productDescription);
-        product.setProductStock(productStock);
-        product.setProductPrice(productPrice);
-        product.setProductThumbnail(productThumbnail);
+        productDTO.setProductId(productId);
+        productDTO.setProductName(productName);
+        productDTO.setProductDescription(productDescription);
+        productDTO.setProductStock(productStock);
+        productDTO.setProductPrice(productPrice);
+        productDTO.setProductThumbnail(productThumbnail);
 
         // Assert
-        assertEquals(productId, product.getProductId());
-        assertEquals(productName, product.getProductName());
-        assertEquals(productDescription, product.getProductDescription());
-        assertEquals(productStock, product.getProductStock());
-        assertEquals(productPrice, product.getProductPrice(), 0.01);
-        assertEquals(productThumbnail, product.getProductThumbnail());
+        assertEquals(productId, productDTO.getProductId());
+        assertEquals(productName, productDTO.getProductName());
+        assertEquals(productDescription, productDTO.getProductDescription());
+        assertEquals(productStock, productDTO.getProductStock());
+        assertEquals(productPrice, productDTO.getProductPrice(), 0.01);
+        assertEquals(productThumbnail, productDTO.getProductThumbnail());
     }
 
     @Test
     public void testProductStockZero() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         int productStock = 0;
         // Act
-        product.setProductStock(productStock);
+        productDTO.setProductStock(productStock);
         // Assert
-        assertEquals(productStock, product.getProductStock());
+        assertEquals(productStock, productDTO.getProductStock());
     }
 
     @Test
     public void testProductStockNegative() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         int productStock = -10;
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            product.setProductStock(productStock);
+            productDTO.setProductStock(productStock);
         });
     }
 
     @Test
     public void testProductStockPositive() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         int productStock = 50;
         // Act
-        product.setProductStock(productStock);
+        productDTO.setProductStock(productStock);
         // Assert
-        assertEquals(productStock, product.getProductStock());
+        assertEquals(productStock, productDTO.getProductStock());
     }
 
     @Test
     public void testProductPricePositive() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         double productPrice = 99.99;
 
         // Act
-        product.setProductPrice(productPrice);
+        productDTO.setProductPrice(productPrice);
 
         // Assert
-        assertEquals(productPrice, product.getProductPrice(), 0.01);
+        assertEquals(productPrice, productDTO.getProductPrice(), 0.01);
     }
 
     @Test
     public void testProductPriceNegative() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         double productPrice = -10.50;
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            product.setProductPrice(productPrice);
+            productDTO.setProductPrice(productPrice);
         });
     }
     @Test
     public void testProductPriceZero() {
         // Arrange
-        Product product = new Product();
+        ProductDTO productDTO = new ProductDTO();
         double productPrice = 0.0;
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            product.setProductPrice(productPrice);
+            productDTO.setProductPrice(productPrice);
         });
     }
 }
