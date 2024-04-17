@@ -12,18 +12,22 @@ public class Product {
     private int productStock;
     private  double productPrice;
     private String productThumbnail;
-
     public void setProductStock(int productStock) {
-        if(productStock < 0){
-            throw new IllegalArgumentException("Stok produk tidak boleh kurang dari 0");
-        }
+        validateStock(productStock);
         this.productStock = productStock;
     }
-
     public void setProductPrice(double productPrice) {
-        if(productPrice <= 0){
+        validatePrice(productPrice);
+        this.productPrice = productPrice;
+    }
+    private void validateStock(int productStock) {
+        if (productStock < 0) {
+            throw new IllegalArgumentException("Stok produk tidak boleh kurang dari 0");
+        }
+    }
+    private void validatePrice(double productPrice) {
+        if (productPrice <= 0) {
             throw new IllegalArgumentException("Harga produk harus bilangan positif");
         }
-        this.productPrice = productPrice;
     }
 }
