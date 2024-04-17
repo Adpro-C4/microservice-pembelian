@@ -1,7 +1,7 @@
 package com.adpro.pembelian.model;
-
 import com.adpro.pembelian.service.CartPricingStrategy;
 import com.adpro.pembelian.service.PricingStrategy;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +11,22 @@ import java.util.Map;
 
 @Setter
 @Getter
+@Entity
 public class ShoppingCart {
+    @Id
     private Long userId;
+
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "productId")
     private Map<String, CartItem> cartItemMap;
+
+    @Transient
     private PricingStrategy<CartItem> pricingStrategy;
-    ShoppingCart(){
+    public ShoppingCart(){
         this.cartItemMap = new HashMap<>();
         this.pricingStrategy = new CartPricingStrategy();
     }
+
     public CartItem addItem(CartItem cartItem){
         cartItemMap.put(cartItem.getProductId(), cartItem);
         return cartItem;
