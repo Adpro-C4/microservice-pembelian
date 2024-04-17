@@ -1,6 +1,6 @@
 package com.adpro.pembelian.model;
 
-public class ProductDTOBuilder {
+public class ProductBuilder {
     private String productId;
     private String productName;
     private String productDescription;
@@ -8,37 +8,37 @@ public class ProductDTOBuilder {
     private double productPrice;
     private String productThumbnail;
 
-    public ProductDTOBuilder withProductId(String productId) {
+    public ProductBuilder withProductId(String productId) {
         this.productId = productId;
         return this;
     }
 
-    public ProductDTOBuilder withProductName(String productName) {
+    public ProductBuilder withProductName(String productName) {
         this.productName = productName;
         return this;
     }
 
-    public ProductDTOBuilder withProductDescription(String productDescription) {
+    public ProductBuilder withProductDescription(String productDescription) {
         this.productDescription = productDescription;
         return this;
     }
 
-    public ProductDTOBuilder withProductStock(int productStock) {
+    public ProductBuilder withProductStock(int productStock) {
         this.productStock = productStock;
         return this;
     }
 
-    public ProductDTOBuilder withProductPrice(double productPrice) {
+    public ProductBuilder withProductPrice(double productPrice) {
         this.productPrice = productPrice;
         return this;
     }
 
-    public ProductDTOBuilder withProductThumbnail(String productThumbnail) {
+    public ProductBuilder withProductThumbnail(String productThumbnail) {
         this.productThumbnail = productThumbnail;
         return this;
     }
 
-    public ProductDTO build() {
-        return new ProductDTO(productId, productName, productDescription, productStock, productPrice, productThumbnail);
+    public Product build() {
+        return new Product(productId, productName, productDescription, productStock, productPrice, productThumbnail);
     }
 }

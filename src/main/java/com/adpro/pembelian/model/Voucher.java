@@ -1,5 +1,6 @@
 package com.adpro.pembelian.model;
 
+import com.adpro.pembelian.enums.VoucherType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class Voucher {
     private Integer voucherQuota;
 
     public void setVoucherType(String voucherType){
-        if(voucherType.equals("Limited") || voucherType.equals("Permanent")){
+        if(VoucherType.isValidType(voucherType)){
             this.voucherType = voucherType;
         }else{
             throw new IllegalArgumentException("Tipe voucher tidak sesuai");

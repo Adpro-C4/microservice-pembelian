@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProductDTOBuilderTest {
+public class ProductBuilderTest {
 
     @Test
     public void testProductBuilder() {
@@ -16,7 +16,7 @@ public class ProductDTOBuilderTest {
         String productThumbnail = "test_thumbnail.jpg";
 
         // Act
-        ProductDTO productDTO = new ProductDTOBuilder()
+        Product product = new ProductBuilder()
                 .withProductId(productId)
                 .withProductName(productName)
                 .withProductDescription(productDescription)
@@ -26,12 +26,12 @@ public class ProductDTOBuilderTest {
                 .build();
 
         // Assert
-        assertEquals(productId, productDTO.getProductId());
-        assertEquals(productName, productDTO.getProductName());
-        assertEquals(productDescription, productDTO.getProductDescription());
-        assertEquals(productStock, productDTO.getProductStock());
-        assertEquals(productPrice, productDTO.getProductPrice(), 0.01);
-        assertEquals(productThumbnail, productDTO.getProductThumbnail());
+        assertEquals(productId, product.getProductId());
+        assertEquals(productName, product.getProductName());
+        assertEquals(productDescription, product.getProductDescription());
+        assertEquals(productStock, product.getProductStock());
+        assertEquals(productPrice, product.getProductPrice(), 0.01);
+        assertEquals(productThumbnail, product.getProductThumbnail());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ProductDTOBuilderTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            new ProductDTOBuilder().withProductPrice(productPrice).build();
+            new ProductBuilder().withProductPrice(productPrice).build();
         });
     }
 
@@ -52,7 +52,7 @@ public class ProductDTOBuilderTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            new ProductDTOBuilder().withProductPrice(productPrice).build();
+            new ProductBuilder().withProductPrice(productPrice).build();
         });
     }
 
@@ -63,7 +63,7 @@ public class ProductDTOBuilderTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            new ProductDTOBuilder().withProductStock(productStock).build();
+            new ProductBuilder().withProductStock(productStock).build();
         });
     }
 }

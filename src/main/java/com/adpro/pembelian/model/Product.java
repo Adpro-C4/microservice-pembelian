@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ProductDTO {
+public class Product {
     private String productId;
     private String productName;
     private String productDescription;
@@ -13,8 +13,8 @@ public class ProductDTO {
     private  double productPrice;
     private String productThumbnail;
 
-    public ProductDTO(String productId, String productName, String productDescription, int productStock,
-                      double productPrice, String productThumbnail){
+    public Product(String productId, String productName, String productDescription, int productStock,
+                   double productPrice, String productThumbnail){
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -23,7 +23,7 @@ public class ProductDTO {
         setProductPrice(productPrice);
     }
 
-    public ProductDTO(){}
+    public Product(){}
 
     public void setProductStock(int productStock) {
         validateStock(productStock);
