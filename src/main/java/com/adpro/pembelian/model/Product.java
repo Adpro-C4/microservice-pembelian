@@ -1,17 +1,34 @@
 package com.adpro.pembelian.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
 @Setter
 @Getter
 public class Product {
+    @Id
     private String productId;
     private String productName;
     private String productDescription;
     private int productStock;
     private  double productPrice;
     private String productThumbnail;
+
+    public Product(String productId, String productName, String productDescription, int productStock,
+                   double productPrice, String productThumbnail){
+        this.productId = productId;
+        this.productName = productName;
+        this.productDescription = productDescription;
+        this.productThumbnail = productThumbnail;
+        setProductStock(productStock);
+        setProductPrice(productPrice);
+    }
+
+    public Product(){}
+
     public void setProductStock(int productStock) {
         validateStock(productStock);
         this.productStock = productStock;
