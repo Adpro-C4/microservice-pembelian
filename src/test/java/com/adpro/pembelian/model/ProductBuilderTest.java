@@ -1,4 +1,6 @@
 package com.adpro.pembelian.model;
+import com.adpro.pembelian.model.dto.DTOProduct;
+import com.adpro.pembelian.model.builder.ProductBuilder;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +18,7 @@ public class ProductBuilderTest {
         String productThumbnail = "test_thumbnail.jpg";
 
         // Act
-        Product product = new ProductBuilder()
+        DTOProduct product = new ProductBuilder()
                 .withProductId(productId)
                 .withProductName(productName)
                 .withProductDescription(productDescription)

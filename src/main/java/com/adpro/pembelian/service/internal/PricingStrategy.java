@@ -1,4 +1,4 @@
-package com.adpro.pembelian.service;
+package com.adpro.pembelian.service.internal;
 
 import java.util.List;
 

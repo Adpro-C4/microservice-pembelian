@@ -1,5 +1,9 @@
 package com.adpro.pembelian.model;
 
+import com.adpro.pembelian.model.dto.DTOVoucher;
+import com.adpro.pembelian.model.decorator.OrdinaryPurchaseRequest;
+import com.adpro.pembelian.model.decorator.PurchaseRequestWithVoucher;
+import com.adpro.pembelian.model.entity.CartItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +39,7 @@ public class PurchaseRequestTest {
         ordinaryRequest.setCartItems(cartItems);
 
         // Create a voucher
-        Voucher voucher = new Voucher();
+        DTOVoucher voucher = new DTOVoucher();
         voucher.setVoucherDiscount(0.1); // 10% discount
 
         // Create a purchase request with voucher

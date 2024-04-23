@@ -1,4 +1,6 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.builder;
+
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 
 public class CustomerDetailsBuilder {
     private String fullname;
@@ -30,8 +32,8 @@ public class CustomerDetailsBuilder {
         return this;
     }
 
-    public CustomerDetails build(){
-        CustomerDetails customerDetails = new CustomerDetails();
+    public DTOCustomerDetails build(){
+        DTOCustomerDetails customerDetails = new DTOCustomerDetails();
         customerDetails.setEmail(this.email);
         customerDetails.setFullname(this.fullname);
         customerDetails.setUsername(this.username);

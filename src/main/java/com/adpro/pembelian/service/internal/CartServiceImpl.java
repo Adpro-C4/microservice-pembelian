@@ -1,9 +1,15 @@
-package com.adpro.pembelian.service;
+package com.adpro.pembelian.service.internal;
 
-import com.adpro.pembelian.model.*;
-import com.adpro.pembelian.model.CartItemUpdateInformation;
+import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
+import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
+import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
+import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.builder.CartItemBuilder;
+import com.adpro.pembelian.model.entity.ShoppingCart;
+import com.adpro.pembelian.model.builder.ShoppingCartBuilder;
 import com.adpro.pembelian.repository.CartItemRepository;
 import com.adpro.pembelian.repository.ShoppingCartRepository;
+import com.adpro.pembelian.service.internal.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
     @Autowired
     CartItemRepository cartItemRepository;
 
@@ -20,7 +26,7 @@ public class CartServiceImpl implements CartService{
     ShoppingCartRepository shoppingCartRepository;
 
     @Override
-    public CartItem createOrUpdateCartItemToShoppingCart(CartItemUpdateInformation cartInformation) {
+    public CartItem createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
         ShoppingCart shoppingCart = getShoppingCart(cartInformation.userId());
         if(shoppingCart == null){
             createShoppingCart(cartInformation.userId());
@@ -44,7 +50,7 @@ public class CartServiceImpl implements CartService{
         assert item != null;
         if(item.getQuantity() == 0){
             deleteCartItemFromShoppingCart(
-                    new CartItemDeletionInformation
+                    new DTOCartItemDeletionInformation
                             (cartInformation.userId(),
                                     cartInformation.productId()));
         }
@@ -52,7 +58,7 @@ public class CartServiceImpl implements CartService{
         return  item;
     }
     @Override
-    public void deleteCartItemFromShoppingCart(CartItemDeletionInformation information) {
+    public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
         ShoppingCart shoppingCart = getShoppingCart(information.userId());
         shoppingCart.getCartItemMap().remove(information.productId());
         shoppingCartRepository.save(shoppingCart);
@@ -72,12 +78,14 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public ShoppingCartInformation getShoppingCartInformation(String userId) {
+    public DTOShoppingCartInformation getShoppingCartInformation(String userId) {
         ShoppingCart shoppingCart = getShoppingCart(userId);
         if(shoppingCart == null) {
             throw new RuntimeException("Tidak ada shopping cart yang berasosiasi dengan id" + userId);
         }
-        return new ShoppingCartInformation(shoppingCart.calculateTotalPrice(), shoppingCart);
+        return new DTOShoppingCartInformation(shoppingCart.calculateTotalPrice(),
+                shoppingCart.getCartItemMap().values().stream().map(CartItem::toDTO).toList(),
+                userId);
     }
 
 

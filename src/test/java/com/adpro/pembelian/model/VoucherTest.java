@@ -1,5 +1,7 @@
 package com.adpro.pembelian.model;
 
+import com.adpro.pembelian.model.dto.DTOVoucher;
+import com.adpro.pembelian.model.builder.VoucherBuilder;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +18,7 @@ public class VoucherTest {
         Integer voucherQuota = null; // Tidak terbatas
 
         // Act
-        Voucher voucher = new VoucherBuilder()
+        DTOVoucher voucher = new VoucherBuilder()
                 .voucherId(voucherId)
                 .voucherName(voucherName)
                 .voucherDescription(voucherDescription)
@@ -46,7 +48,7 @@ public class VoucherTest {
         Integer voucherQuota = 50;
 
         // Act
-        Voucher voucher = new VoucherBuilder()
+        DTOVoucher voucher = new VoucherBuilder()
                 .voucherId(voucherId)
                 .voucherName(voucherName)
                 .voucherDescription(voucherDescription)

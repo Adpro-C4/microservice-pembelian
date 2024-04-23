@@ -1,11 +1,11 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class Product {
+public class DTOProduct {
     private String productId;
     private String productName;
     private String productDescription;
@@ -14,8 +14,8 @@ public class Product {
     private String productThumbnail;
     private String brand;
 
-    public Product(String productId, String productName, String productDescription, int productStock,
-                   double productPrice, String productThumbnail){
+    public DTOProduct(String productId, String productName, String productDescription, int productStock,
+                      double productPrice, String productThumbnail){
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -24,7 +24,7 @@ public class Product {
         setProductPrice(productPrice);
     }
 
-    public Product(){}
+    public DTOProduct(){}
 
     public void setProductStock(int productStock) {
         validateStock(productStock);

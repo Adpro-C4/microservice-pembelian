@@ -1,6 +1,8 @@
 package com.adpro.pembelian.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.adpro.pembelian.model.dto.DTOProduct;
 import org.junit.jupiter.api.Test;
 
 public class ProductTest {
@@ -8,7 +10,7 @@ public class ProductTest {
     @Test
     public void testProductGetterSetter() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         String productId = "123";
         String productName = "Test Product";
         String productDescription = "This is a test product";
@@ -36,7 +38,7 @@ public class ProductTest {
     @Test
     public void testProductStockZero() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         int productStock = 0;
         // Act
         product.setProductStock(productStock);
@@ -47,7 +49,7 @@ public class ProductTest {
     @Test
     public void testProductStockNegative() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         int productStock = -10;
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
@@ -58,7 +60,7 @@ public class ProductTest {
     @Test
     public void testProductStockPositive() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         int productStock = 50;
         // Act
         product.setProductStock(productStock);
@@ -69,7 +71,7 @@ public class ProductTest {
     @Test
     public void testProductPricePositive() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         double productPrice = 99.99;
 
         // Act
@@ -82,7 +84,7 @@ public class ProductTest {
     @Test
     public void testProductPriceNegative() {
         // Arrange
-        Product product = new Product();
+        DTOProduct product = new DTOProduct();
         double productPrice = -10.50;
 
         // Act & Assert

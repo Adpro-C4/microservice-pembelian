@@ -1,4 +1,6 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.builder;
+
+import com.adpro.pembelian.model.dto.DTOVoucher;
 
 public class VoucherBuilder {
     private Long voucherId;
@@ -38,8 +40,8 @@ public class VoucherBuilder {
         return this;
     }
 
-    public Voucher build() {
-        Voucher voucher = new Voucher();
+    public DTOVoucher build() {
+        DTOVoucher voucher = new DTOVoucher();
         voucher.setVoucherId(this.voucherId);
         voucher.setVoucherName(this.voucherName);
         voucher.setVoucherDescription(this.voucherDescription);

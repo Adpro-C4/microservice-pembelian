@@ -1,7 +1,7 @@
-package com.adpro.pembelian.service;
+package com.adpro.pembelian.service.external;
 import com.adpro.pembelian.enums.ProductApi;
-import com.adpro.pembelian.model.Product;
-import com.adpro.pembelian.model.ProductBuilder;
+import com.adpro.pembelian.model.dto.DTOProduct;
+import com.adpro.pembelian.model.builder.ProductBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class APIProductServiceImpl implements APIProductService {
 
     @Autowired
     private RestTemplate restTemplate;
     @Override
-    public Product getProductFromAPI(String id) {
+    public DTOProduct getProductFromAPI(String id) {
         String url = ProductApi.PRODUCT.getUrl()+"/"+id;
         JsonNode json = restTemplate.getForObject(url, JsonNode.class);
         assert json != null;
         return  getProduct(json);
     }
 
-    public  Product getProduct(JsonNode json){
+    public DTOProduct getProduct(JsonNode json){
         ProductBuilder productBuilder = new ProductBuilder();
         productBuilder.withProductId(json.get("id").textValue())
                 .withProductName(json.get("name").textValue())
@@ -35,9 +35,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProductFromAPI() {
+    public List<DTOProduct> getAllProductFromAPI() {
         String url = ProductApi.ALL_PRODUCT.getUrl();
-        List<Product> products = new ArrayList<>();
+        List<DTOProduct> products = new ArrayList<>();
         JsonNode json = restTemplate.getForObject(url, JsonNode.class);
         System.out.println(json);
         assert json != null;

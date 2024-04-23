@@ -1,8 +1,8 @@
 package com.adpro.pembelian.controller;
 
 
-import com.adpro.pembelian.service.ProductService;
-import com.adpro.pembelian.service.CustomerDetailsService;
+import com.adpro.pembelian.service.external.APIProductService;
+import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController {
     @Autowired
-    ProductService productService;
+    APIProductService productService;
     @Autowired
-    CustomerDetailsService userDetailsService;
+    APICustomerDetailsService userDetailsService;
     @GetMapping("/get-a-product")
     public String getProductTest(){
         productService.getProductFromAPI("1");

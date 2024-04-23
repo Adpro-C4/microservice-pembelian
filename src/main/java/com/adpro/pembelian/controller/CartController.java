@@ -1,10 +1,10 @@
 package com.adpro.pembelian.controller;
 
 import com.adpro.pembelian.common.ResponseHandler;
-import com.adpro.pembelian.model.CartItemDeletionInformation;
-import com.adpro.pembelian.model.CartItemUpdateInformation;
-import com.adpro.pembelian.model.ShoppingCartInformation;
-import com.adpro.pembelian.service.CartService;
+import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
+import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
+import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
+import com.adpro.pembelian.service.internal.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class CartController {
 
     @GetMapping("/data/{id}")
     public ResponseEntity<Object> getShoppingCartInformation(@PathVariable String id){
-        ShoppingCartInformation information = cartService.getShoppingCartInformation(id);
+        DTOShoppingCartInformation information = cartService.getShoppingCartInformation(id);
         Map<String,Object> response = new HashMap<>();
         String message = "berhasil mendapatkan data shopping cart";
         response.put("message", message);
@@ -30,7 +30,7 @@ public class CartController {
                 HttpStatus.ACCEPTED, response);
     }
     @PostMapping("/update")
-    public ResponseEntity<Object> updateCartItemOnShoppingCart(@RequestBody CartItemUpdateInformation cartItemUpdateInformation){
+    public ResponseEntity<Object> updateCartItemOnShoppingCart(@RequestBody DTOCartItemUpdateInformation cartItemUpdateInformation){
         cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);
         Map<String, Object> response = new HashMap<>();
         String message = "Sukses mengupdate cart item";
@@ -38,7 +38,7 @@ public class CartController {
         return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteCartItemFromShoppingCart(@RequestBody CartItemDeletionInformation information){
+    public ResponseEntity<Object> deleteCartItemFromShoppingCart(@RequestBody DTOCartItemDeletionInformation information){
         cartService.deleteCartItemFromShoppingCart(information);
         Map<String, Object> response = new HashMap<>();
         String message = "Sukses menghapus cart item";

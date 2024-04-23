@@ -1,4 +1,6 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.builder;
+
+import com.adpro.pembelian.model.dto.DTOProduct;
 
 public class ProductBuilder {
     private String productId;
@@ -45,8 +47,8 @@ public class ProductBuilder {
         return this;
     }
 
-    public Product build() {
-        Product product = new Product();
+    public DTOProduct build() {
+        DTOProduct product = new DTOProduct();
         product.setProductId(productId);
         product.setProductDescription(productDescription);
         product.setProductName(productName);

@@ -1,5 +1,7 @@
 package com.adpro.pembelian.model;
 
+import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.entity.ShoppingCart;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.dto;
 
 import com.adpro.pembelian.enums.VoucherType;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Voucher {
+public class DTOVoucher {
     private  Long voucherId;
     private String voucherName;
     private String voucherDescription;

@@ -1,8 +1,8 @@
 package com.adpro.pembelian.service;
 
 
-import com.adpro.pembelian.enums.UserApi;
-import com.adpro.pembelian.model.CustomerDetails;
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
+import com.adpro.pembelian.service.external.APICustomerDetailsServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -25,7 +25,7 @@ public class CustomerDetailsServiceTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private CustomerDetailsServiceImpl customerDetailsService;
+    private APICustomerDetailsServiceImpl customerDetailsService;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +47,7 @@ public class CustomerDetailsServiceTest {
         when(restTemplate.getForEntity(any(String.class), any(Class.class)))
                 .thenReturn(new ResponseEntity<>(responseDataNode, HttpStatus.OK));
 
-        CustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
+        DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
 
 
         assertEquals(name, customerDetails.getFullname());

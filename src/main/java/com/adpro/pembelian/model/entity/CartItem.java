@@ -1,4 +1,5 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.entity;
+import com.adpro.pembelian.model.dto.DTOCartItem;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,16 @@ public class CartItem {
     private String name;
     private int quantity;
     private double price;
+
+    public DTOCartItem toDTO() {
+        DTOCartItem dto = new DTOCartItem();
+        dto.setId(this.id);
+        dto.setProductId(this.productId);
+        dto.setName(this.name);
+        dto.setQuantity(this.quantity);
+        dto.setPrice(this.price);
+        return dto;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -1,4 +1,5 @@
 package com.adpro.pembelian.model;
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +15,7 @@ public class CustomerDetailsTest {
         String email = "johndoe@example.com";
 
         // Act
-        CustomerDetails customer = new CustomerDetails();
+        DTOCustomerDetails customer = new DTOCustomerDetails();
         customer.setFullname(fullname);
         customer.setUsername(username);
         customer.setUserId(userId);
@@ -32,7 +33,7 @@ public class CustomerDetailsTest {
     @Test
     public void testSetters() {
         // Arrange
-        CustomerDetails customer = new CustomerDetails();
+        DTOCustomerDetails customer = new DTOCustomerDetails();
 
         // Act
         customer.setFullname("Jane Doe");

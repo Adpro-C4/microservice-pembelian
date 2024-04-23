@@ -1,19 +1,19 @@
-package com.adpro.pembelian.service;
+package com.adpro.pembelian.service.external;
 
 import com.adpro.pembelian.enums.UserApi;
-import com.adpro.pembelian.model.CustomerDetails;
-import com.adpro.pembelian.model.CustomerDetailsBuilder;
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
+import com.adpro.pembelian.model.builder.CustomerDetailsBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class CustomerDetailsServiceImpl implements CustomerDetailsService {
+public class APICustomerDetailsServiceImpl implements APICustomerDetailsService {
     @Autowired
     private RestTemplate restTemplate;
     @Override
-    public CustomerDetails getUserDetailsAPI(String userId) {
+    public DTOCustomerDetails getUserDetailsAPI(String userId) {
         String url = UserApi.GET_USERDATA.getUrl()+"/"+userId;
         try {
             JsonNode node = restTemplate.getForEntity(url, JsonNode.class).getBody();
@@ -27,7 +27,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
         }
     }
 
-    private  CustomerDetails getUserDetails(JsonNode node){
+    private DTOCustomerDetails getUserDetails(JsonNode node){
       return new CustomerDetailsBuilder()
               .withEmail(node.get("email").textValue())
               .withFullname(node.get("name").textValue())

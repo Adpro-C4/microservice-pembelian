@@ -1,6 +1,6 @@
-package com.adpro.pembelian.model;
-import com.adpro.pembelian.service.CartPricingStrategy;
-import com.adpro.pembelian.service.PricingStrategy;
+package com.adpro.pembelian.model.entity;
+import com.adpro.pembelian.service.internal.CartPricingStrategy;
+import com.adpro.pembelian.service.internal.PricingStrategy;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

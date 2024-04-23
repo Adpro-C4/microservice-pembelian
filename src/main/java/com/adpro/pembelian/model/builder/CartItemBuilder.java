@@ -1,4 +1,6 @@
-package com.adpro.pembelian.model;
+package com.adpro.pembelian.model.builder;
+
+import com.adpro.pembelian.model.entity.CartItem;
 
 public class CartItemBuilder {
     private Long id;

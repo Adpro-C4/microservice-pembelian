@@ -1,5 +1,6 @@
 package com.adpro.pembelian.service;
-import com.adpro.pembelian.model.Product;
+import com.adpro.pembelian.model.dto.DTOProduct;
+import com.adpro.pembelian.service.external.APIProductServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,7 @@ public class ProductServiceTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private ProductServiceImpl productService;
+    private APIProductServiceImpl productService;
 
     @Test
     public void testGetProductFromAPI() {
@@ -31,7 +32,7 @@ public class ProductServiceTest {
         JsonNode jsonNode = createSampleJsonNode();
         when(restTemplate.getForObject(any(String.class), any(Class.class))).thenReturn(jsonNode);
 
-        Product product = productService.getProductFromAPI(id);
+        DTOProduct product = productService.getProductFromAPI(id);
 
         assertNotNull(product);
         assertEquals("1", product.getProductId());
@@ -45,7 +46,7 @@ public class ProductServiceTest {
 
         when(restTemplate.getForObject(any(String.class), any(Class.class))).thenReturn(jsonArray);
 
-        List<Product> products = productService.getAllProductFromAPI();
+        List<DTOProduct> products = productService.getAllProductFromAPI();
 
         assertFalse(products.isEmpty());
     }
