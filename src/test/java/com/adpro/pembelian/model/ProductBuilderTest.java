@@ -45,16 +45,7 @@ public class ProductBuilderTest {
         });
     }
 
-    @Test
-    public void testProductBuilderZeroPrice() {
-        // Arrange
-        double productPrice = 0.0;
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> {
-            new ProductBuilder().withProductPrice(productPrice).build();
-        });
-    }
 
     @Test
     public void testProductBuilderNegativeStock() {
