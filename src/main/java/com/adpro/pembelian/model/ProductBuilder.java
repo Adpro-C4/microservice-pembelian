@@ -8,9 +8,16 @@ public class ProductBuilder {
     private double productPrice;
     private String productThumbnail;
 
+    private  String brand;
+
     public ProductBuilder withProductId(String productId) {
         this.productId = productId;
         return this;
+    }
+
+    public  ProductBuilder withBrand(String brand){
+        this.brand = brand;
+        return  this;
     }
 
     public ProductBuilder withProductName(String productName) {
@@ -39,6 +46,14 @@ public class ProductBuilder {
     }
 
     public Product build() {
-        return new Product(productId, productName, productDescription, productStock, productPrice, productThumbnail);
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setProductDescription(productDescription);
+        product.setProductName(productName);
+        product.setProductPrice(productPrice);
+        product.setProductStock(productStock);
+        product.setProductThumbnail(productThumbnail);
+        product.setBrand(brand);
+        return product;
     }
 }

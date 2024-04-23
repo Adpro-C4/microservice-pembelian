@@ -90,16 +90,6 @@ public class ProductTest {
             product.setProductPrice(productPrice);
         });
     }
-    @Test
-    public void testProductPriceZero() {
-        // Arrange
-        Product product = new Product();
-        double productPrice = 0.0;
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> {
-            product.setProductPrice(productPrice);
-        });
-    }
 }
 

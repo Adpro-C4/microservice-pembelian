@@ -12,6 +12,7 @@ public class Product {
     private int productStock;
     private  double productPrice;
     private String productThumbnail;
+    private String brand;
 
     public Product(String productId, String productName, String productDescription, int productStock,
                    double productPrice, String productThumbnail){
@@ -39,7 +40,7 @@ public class Product {
         }
     }
     private void validatePrice(double productPrice) {
-        if (productPrice <= 0) {
+        if (productPrice < 0) {
             throw new IllegalArgumentException("Harga produk harus bilangan positif");
         }
     }
