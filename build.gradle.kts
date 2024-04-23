@@ -31,7 +31,7 @@ dependencies {
 	implementation("org.apache.commons:commons-pool2:2.11.1")
 	implementation ("org.apache.logging.log4j:log4j-slf4j-impl:2.14.1")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+	//implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("com.github.javafaker:javafaker:1.0.2")
