@@ -1,5 +1,6 @@
 package com.adpro.pembelian.service.internal;
 
+import com.adpro.pembelian.enums.StatusAPI;
 import com.adpro.pembelian.model.entity.Order;
 import com.adpro.pembelian.model.entity.decorator.OrdinaryOrder;
 import com.adpro.pembelian.model.entity.decorator.OrderWithVoucher;
@@ -7,11 +8,18 @@ import com.adpro.pembelian.model.dto.*;
 import com.adpro.pembelian.repository.OrderRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import com.adpro.pembelian.service.external.APIVoucherService;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PurchaseServiceImpl implements  PurchaseService {
@@ -51,8 +59,35 @@ public class PurchaseServiceImpl implements  PurchaseService {
         } else {
             orderRequest = ordinaryPurchaseRequest;
         }
-        orderRepository.save(orderRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> data = new HashMap<>();
+        data.put("orderId", orderRequest.getId());
+        data.put("orderStatus", "WAITING");
 
+        HttpEntity<Map<String,Object>> requestBody = new HttpEntity<>(data, headers);
+        try{
+            restTemplate.postForEntity(StatusAPI.POST_CREATE_STATUS.getUrl(), requestBody,String.class);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        orderRepository.save(orderRequest);
+    }
+
+    @Override
+    public void removePurchaseRequest(String orderId) {
+        orderRepository.deleteById(Long.parseLong(orderId));
+    }
+
+    @Override
+    public Order viewOrder(String orderId) {
+        return orderRepository.findById(Long.parseLong(orderId)).orElse(null);
+    }
+
+    @Override
+    public List<Order> viewAllOrderByUserId(String userId) {
+        return orderRepository.findByUserId(userId);
     }
 
 }

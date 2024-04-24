@@ -12,7 +12,7 @@ public class APIVoucherServiceImpl implements APIVoucherService {
     @Override
     public DTOVoucher getVoucher(String voucherId) {
         return new VoucherBuilder().
-                voucherId(Long.valueOf(voucherId)).
+                voucherId(Long.parseLong(voucherId)).
                 voucherName("TEST VOUCHER").
                 voucherDescription("DESKRIPSI").
                 voucherDiscount(0.2).

@@ -2,6 +2,7 @@ package com.adpro.pembelian.model.entity.decorator;
 
 import com.adpro.pembelian.model.entity.Order;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 
 @Entity

@@ -74,7 +74,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ShoppingCart getShoppingCart(String userId){
-        return  shoppingCartRepository.findById(Long.valueOf(userId)).orElse(null);
+        return  shoppingCartRepository.findById(Long.parseLong(userId)).orElse(null);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class CartServiceImpl implements CartService {
             shoppingCartRepository.save(
                     new ShoppingCartBuilder().withCartItems
                             (new HashMap<>()).
-                            withUserId(Long.valueOf(userId)).build());
+                            withUserId(Long.parseLong(userId)).build());
         }
     }
 }
