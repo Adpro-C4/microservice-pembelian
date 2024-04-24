@@ -16,6 +16,10 @@ public class CartItem {
     private int quantity;
     private double price;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     public DTOCartItem toDTO() {
         DTOCartItem dto = new DTOCartItem();
         dto.setId(this.id);

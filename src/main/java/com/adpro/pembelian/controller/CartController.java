@@ -24,7 +24,7 @@ public class CartController {
         Map<String,Object> response = new HashMap<>();
         String message = "berhasil mendapatkan data shopping cart";
         response.put("message", message);
-        response.put("shoppingCart", information.shoppingCart());
+        response.put("shoppingCart", information.dtoCartItemList());
         response.put("totalPrice", information.totalPrice());
         return  ResponseHandler.generateResponse(message,
                 HttpStatus.ACCEPTED, response);

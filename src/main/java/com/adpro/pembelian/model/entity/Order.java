@@ -6,19 +6,20 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Setter
 @Getter
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Order {
+public abstract class Order implements Serializable {
+    @Column(insertable = false, updatable = false)
     protected String userId;
     protected   String timestamp;
     @Embedded
     protected DTOCustomerDetails customerDetails;
     protected String address;
-    @ManyToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     protected List<CartItem> cartItems;
     @Transient
     protected PricingStrategy<CartItem> strategy;

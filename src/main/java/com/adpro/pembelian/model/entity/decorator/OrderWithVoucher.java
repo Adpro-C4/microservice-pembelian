@@ -19,11 +19,9 @@ public class OrderWithVoucher extends OrderDecorator {
     @Embedded
     private DTOVoucher voucher;
 
-    private Long voucherId;
     public OrderWithVoucher(Order request, DTOVoucher voucher) {
         super(request);
         this.voucher = voucher;
-        this.voucherId = voucher.getVoucherId();
     }
 
     public OrderWithVoucher() {
