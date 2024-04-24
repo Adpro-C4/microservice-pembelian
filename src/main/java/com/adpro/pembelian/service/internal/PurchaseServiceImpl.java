@@ -1,5 +1,6 @@
 package com.adpro.pembelian.service.internal;
 
+import com.adpro.pembelian.common.ShippingUtility;
 import com.adpro.pembelian.enums.StatusAPI;
 import com.adpro.pembelian.model.entity.Order;
 import com.adpro.pembelian.model.entity.decorator.OrdinaryOrder;
@@ -41,10 +42,13 @@ public class PurchaseServiceImpl implements  PurchaseService {
         String iso8601Timestamp = timestamp.toString();
         DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(request.userId());
         Order orderRequest = null;
+        String resi = ShippingUtility.generateTrackingCode(request.shippingMethod());
         OrdinaryOrder ordinaryPurchaseRequest = new OrdinaryOrder();
         ordinaryPurchaseRequest.setUserId(request.userId());
         ordinaryPurchaseRequest.setAddress(request.address());
         ordinaryPurchaseRequest.setTimestamp(iso8601Timestamp);
+        ordinaryPurchaseRequest.setShippingMethod(request.shippingMethod());
+        ordinaryPurchaseRequest.setResi(resi);
         ordinaryPurchaseRequest.setCustomerDetails(customerDetails);
         ordinaryPurchaseRequest.setCartItems(cartService.getCartItemsFromShoppingCart(
                 request.userId()).stream().filter(cartItem ->
@@ -63,7 +67,10 @@ public class PurchaseServiceImpl implements  PurchaseService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, Object> data = new HashMap<>();
         data.put("orderId", orderRequest.getId());
-        data.put("orderStatus", "WAITING");
+        data.put("orderStatus", "Menunggu Konfirmasi");
+
+        orderRequest.setShippingMethod(request.shippingMethod());
+        orderRequest.setResi(resi);
 
         HttpEntity<Map<String,Object>> requestBody = new HttpEntity<>(data, headers);
         try{

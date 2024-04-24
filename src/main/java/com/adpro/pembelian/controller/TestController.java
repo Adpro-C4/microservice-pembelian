@@ -33,7 +33,8 @@ public class TestController {
                 "152",
                 new ArrayList<>(),
                 "12",
-                "Depok Jawa Barat"
+                "Depok Jawa Barat",
+                "WUZZ"
         ));
         return "SUCCESS";
     }

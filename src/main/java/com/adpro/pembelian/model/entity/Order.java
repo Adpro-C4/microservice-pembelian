@@ -18,6 +18,8 @@ import java.util.List;
 public abstract class Order implements Serializable {
     protected String userId;
     protected   String timestamp;
+    protected String shippingMethod;
+    protected String resi;
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "userId", column = @Column(name = "customer_userId"))
