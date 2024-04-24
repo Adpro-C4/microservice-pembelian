@@ -1,7 +1,7 @@
 package com.adpro.pembelian.service.internal;
 
-import com.adpro.pembelian.model.dto.DTOCheckoutRequest;
+import com.adpro.pembelian.model.dto.DTOPurchaseInformation;
 
 public interface PurchaseService {
-    DTOCheckoutRequest createPurchaseRequest(String userId, String voucherId, String)
+    void createPurchaseRequest(DTOPurchaseInformation request);
 }

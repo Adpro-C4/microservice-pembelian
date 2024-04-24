@@ -1,8 +1,9 @@
 package com.adpro.pembelian.model.dto;
 
+import com.adpro.pembelian.model.entity.Order;
+
 public record DTOCheckoutRequest(DTOCustomerDetails customerInformation,
-                                 DTOShoppingCartInformation shoppingCartInformation,
-                                 DTOVoucher voucherInformation,
+                                 Order purchaseRequest,
                                  String address
                                  ) {
 }

@@ -1,6 +1,6 @@
 package com.adpro.pembelian.service.external;
 
-import com.adpro.pembelian.enums.UserApi;
+import com.adpro.pembelian.enums.UserAPI;
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.model.builder.CustomerDetailsBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,7 +14,7 @@ public class APICustomerDetailsServiceImpl implements APICustomerDetailsService 
     private RestTemplate restTemplate;
     @Override
     public DTOCustomerDetails getUserDetailsAPI(String userId) {
-        String url = UserApi.GET_USERDATA.getUrl()+"/"+userId;
+        String url = UserAPI.GET_USERDATA.getUrl()+"/"+userId;
         try {
             JsonNode node = restTemplate.getForEntity(url, JsonNode.class).getBody();
             System.out.println(node);

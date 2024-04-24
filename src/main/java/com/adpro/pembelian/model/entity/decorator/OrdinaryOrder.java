@@ -1,7 +1,7 @@
-package com.adpro.pembelian.model.decorator;
+package com.adpro.pembelian.model.entity.decorator;
 
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
-import com.adpro.pembelian.model.dto.DTOPurchaseRequest;
+import com.adpro.pembelian.model.entity.Order;
 import com.adpro.pembelian.model.entity.CartItem;
 import com.adpro.pembelian.service.internal.CartPricingStrategy;
 import com.adpro.pembelian.service.internal.PricingStrategy;
@@ -12,17 +12,20 @@ import java.util.List;
 
 @Setter
 @Getter
-public class OrdinaryPurchaseRequest implements DTOPurchaseRequest {
-    private String id;
+public class OrdinaryOrder extends Order {
+    private String userId;
     private  String timestamp;
     private DTOCustomerDetails customerDetails;
     private String address;
     private List<CartItem> cartItems;
     private PricingStrategy<CartItem> strategy;
+    private String price;
 
-    public  OrdinaryPurchaseRequest(){
+    public OrdinaryOrder(){
         strategy = new CartPricingStrategy();
     }
+
+
 
     @Override
     public double getTotalPrice() {

@@ -7,7 +7,6 @@ public class VoucherBuilder {
     private String voucherName;
     private String voucherDescription;
     private double voucherDiscount;
-    private String voucherType;
     private Integer voucherQuota;
 
     public VoucherBuilder voucherId(Long voucherId) {
@@ -30,10 +29,7 @@ public class VoucherBuilder {
         return this;
     }
 
-    public VoucherBuilder voucherType(String voucherType) {
-        this.voucherType = voucherType;
-        return this;
-    }
+
 
     public VoucherBuilder voucherQuota(Integer voucherQuota) {
         this.voucherQuota = voucherQuota;
@@ -46,7 +42,6 @@ public class VoucherBuilder {
         voucher.setVoucherName(this.voucherName);
         voucher.setVoucherDescription(this.voucherDescription);
         voucher.setVoucherDiscount(this.voucherDiscount);
-        voucher.setVoucherType(this.voucherType);
         voucher.setVoucherQuota(this.voucherQuota);
         return voucher;
     }

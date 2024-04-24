@@ -1,8 +1,7 @@
-package com.adpro.pembelian.model.decorator;
+package com.adpro.pembelian.model.entity.decorator;
 
-import com.adpro.pembelian.model.decorator.PurchaseRequestDecorator;
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
-import com.adpro.pembelian.model.dto.DTOPurchaseRequest;
+import com.adpro.pembelian.model.entity.Order;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import com.adpro.pembelian.model.entity.CartItem;
 import lombok.Getter;
@@ -12,21 +11,26 @@ import java.util.List;
 
 @Setter
 @Getter
-public class PurchaseRequestWithVoucher extends PurchaseRequestDecorator {
+public class OrderWithVoucher extends OrderDecorator {
     private DTOVoucher voucher;
-    public PurchaseRequestWithVoucher(DTOPurchaseRequest request, DTOVoucher voucher) {
+    public OrderWithVoucher(Order request, DTOVoucher voucher) {
         super(request);
         this.voucher = voucher;
     }
 
     @Override
-    public String getId() {
-        return this.request.getId();
+    public String getUserId() {
+        return this.request.getUserId();
     }
 
     @Override
     public String getTimestamp() {
         return this.request.getTimestamp();
+    }
+
+    @Override
+    public void setPrice(String price) {
+        this.request.setPrice(price);
     }
 
     @Override

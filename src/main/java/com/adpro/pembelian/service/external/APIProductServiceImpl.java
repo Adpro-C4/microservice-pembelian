@@ -1,5 +1,5 @@
 package com.adpro.pembelian.service.external;
-import com.adpro.pembelian.enums.ProductApi;
+import com.adpro.pembelian.enums.ProductAPI;
 import com.adpro.pembelian.model.dto.DTOProduct;
 import com.adpro.pembelian.model.builder.ProductBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,7 +16,7 @@ public class APIProductServiceImpl implements APIProductService {
     private RestTemplate restTemplate;
     @Override
     public DTOProduct getProductFromAPI(String id) {
-        String url = ProductApi.PRODUCT.getUrl()+"/"+id;
+        String url = ProductAPI.PRODUCT.getUrl()+"/"+id;
         JsonNode json = restTemplate.getForObject(url, JsonNode.class);
         assert json != null;
         return  getProduct(json);
@@ -36,7 +36,7 @@ public class APIProductServiceImpl implements APIProductService {
 
     @Override
     public List<DTOProduct> getAllProductFromAPI() {
-        String url = ProductApi.ALL_PRODUCT.getUrl();
+        String url = ProductAPI.ALL_PRODUCT.getUrl();
         List<DTOProduct> products = new ArrayList<>();
         JsonNode json = restTemplate.getForObject(url, JsonNode.class);
         System.out.println(json);

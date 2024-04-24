@@ -1,8 +1,8 @@
 package com.adpro.pembelian.model;
 
 import com.adpro.pembelian.model.dto.DTOVoucher;
-import com.adpro.pembelian.model.decorator.OrdinaryPurchaseRequest;
-import com.adpro.pembelian.model.decorator.PurchaseRequestWithVoucher;
+import com.adpro.pembelian.model.entity.decorator.OrdinaryOrder;
+import com.adpro.pembelian.model.entity.decorator.OrderWithVoucher;
 import com.adpro.pembelian.model.entity.CartItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +20,7 @@ public class PurchaseRequestTest {
         cartItems.add(new CartItem(2L, "prod2", "Product 2", 1, 20.0));
 
         // Create an ordinary purchase request
-        OrdinaryPurchaseRequest request = new OrdinaryPurchaseRequest();
+        OrdinaryOrder request = new OrdinaryOrder();
         request.setCartItems(cartItems);
 
         // Check if the total price is calculated correctly
@@ -35,7 +35,7 @@ public class PurchaseRequestTest {
         cartItems.add(new CartItem(2L, "prod2", "Product 2", 1, 20.0));
 
         // Create an ordinary purchase request
-        OrdinaryPurchaseRequest ordinaryRequest = new OrdinaryPurchaseRequest();
+        OrdinaryOrder ordinaryRequest = new OrdinaryOrder();
         ordinaryRequest.setCartItems(cartItems);
 
         // Create a voucher
@@ -43,7 +43,7 @@ public class PurchaseRequestTest {
         voucher.setVoucherDiscount(0.1); // 10% discount
 
         // Create a purchase request with voucher
-        PurchaseRequestWithVoucher requestWithVoucher = new PurchaseRequestWithVoucher(ordinaryRequest, voucher);
+        OrderWithVoucher requestWithVoucher = new OrderWithVoucher(ordinaryRequest, voucher);
 
         // Check if the total price is calculated correctly with the voucher applied
         assertEquals(27.0, requestWithVoucher.getTotalPrice());

@@ -11,14 +11,5 @@ public class DTOVoucher {
     private String voucherName;
     private String voucherDescription;
     private double voucherDiscount;
-    private  String voucherType;
     private Integer voucherQuota;
-
-    public void setVoucherType(String voucherType){
-        if(VoucherType.isValidType(voucherType)){
-            this.voucherType = voucherType;
-        }else{
-            throw new IllegalArgumentException("Tipe voucher tidak sesuai");
-        }
-    }
 }
