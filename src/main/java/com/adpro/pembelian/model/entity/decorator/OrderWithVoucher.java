@@ -4,6 +4,9 @@ import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.model.entity.Order;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import com.adpro.pembelian.model.entity.CartItem;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,11 +14,20 @@ import java.util.List;
 
 @Setter
 @Getter
+@Entity
 public class OrderWithVoucher extends OrderDecorator {
+    @Embedded
     private DTOVoucher voucher;
+
+    private Long voucherId;
     public OrderWithVoucher(Order request, DTOVoucher voucher) {
         super(request);
         this.voucher = voucher;
+        this.voucherId = voucher.getVoucherId();
+    }
+
+    public OrderWithVoucher() {
+
     }
 
     @Override
@@ -43,10 +55,6 @@ public class OrderWithVoucher extends OrderDecorator {
         return this.request.getAddress();
     }
 
-    @Override
-    public List<CartItem> getCartItems() {
-        return this.request.getCartItems();
-    }
     @Override
     public double getTotalPrice() {
         return this.request.getTotalPrice() - this.request.getTotalPrice() * voucher.getVoucherDiscount();
