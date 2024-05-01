@@ -36,4 +36,14 @@ public abstract class OrderTemplate implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     public abstract double getTotalPrice();
+
+    protected  void setData(OrderTemplate orderTemplate){
+        setShippingMethod(orderTemplate.getShippingMethod());
+        setAddress(orderTemplate.getAddress());
+        setResi(orderTemplate.getResi());
+        setCustomerDetails(orderTemplate.getCustomerDetails());
+        setPrice(orderTemplate.getPrice());
+        setTimestamp(orderTemplate.getTimestamp());
+        setUserId(orderTemplate.getUserId());
+    }
 }

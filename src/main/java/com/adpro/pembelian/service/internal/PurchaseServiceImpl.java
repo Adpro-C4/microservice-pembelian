@@ -2,7 +2,9 @@ package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.common.ShippingUtility;
 import com.adpro.pembelian.enums.StatusAPI;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.OrderTemplate;
+import com.adpro.pembelian.model.entity.OrderWithVoucherEntity;
 import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
 import com.adpro.pembelian.model.decorator.OrderWithVoucherDecorator;
 import com.adpro.pembelian.model.dto.*;
@@ -34,14 +36,38 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     @Autowired
     CartService cartService;
+
     @Override
     public void createPurchaseRequest(DTOPurchaseInformation request) {
-        DTOVoucher voucher = null;
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
-        DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(request.userId());
-        OrderTemplate orderRequest = null;
+        DTOCustomerDetails customerDetails = getCustomerDetails(request.userId());
         String resi = ShippingUtility.generateTrackingCode(request.shippingMethod());
+        OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetails, resi);
+        sendOrderStatus(orderRequest);
+        saveOrder(orderRequest);
+    }
+
+    private DTOCustomerDetails getCustomerDetails(String userId) {
+        return customerDetailsService.getUserDetailsAPI(userId);
+    }
+
+    private OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
+        List<CartItemEntity> cartItems = getCartItems(request.userId(), request.cartItems());
+        OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);
+        orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().
+                calculateTotalPrice(orderRequest.getCartItems())));
+        return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
+    }
+
+    private List<CartItemEntity> getCartItems(String userId, List<String> cartItemIds) {
+        return cartService.getCartItemsFromShoppingCart(userId).stream()
+                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getId())))
+                .toList();
+    }
+    private OrderTemplate createOrderEntity(DTOPurchaseInformation request, String iso8601Timestamp,
+                                            DTOCustomerDetails customerDetails, String resi,
+                                            List<CartItemEntity> cartItems) {
         OrdinaryOrderEntity ordinaryPurchaseRequest = new OrdinaryOrderEntity();
         ordinaryPurchaseRequest.setUserId(request.userId());
         ordinaryPurchaseRequest.setAddress(request.address());
@@ -49,35 +75,25 @@ public class PurchaseServiceImpl implements  PurchaseService {
         ordinaryPurchaseRequest.setShippingMethod(request.shippingMethod());
         ordinaryPurchaseRequest.setResi(resi);
         ordinaryPurchaseRequest.setCustomerDetails(customerDetails);
-        ordinaryPurchaseRequest.setCartItems(cartService.getCartItemsFromShoppingCart(
-                request.userId()).stream().filter(cartItem ->
-                request.cartItems().contains(String.valueOf(cartItem.getId()))).toList());
-        ordinaryPurchaseRequest.setPrice(
-                String.valueOf(ordinaryPurchaseRequest.getStrategy().
-                        calculateTotalPrice(ordinaryPurchaseRequest.getCartItems())));
+        ordinaryPurchaseRequest.setCartItems(cartItems);
+        return ordinaryPurchaseRequest;
+    }
 
-        if (request.voucherId() != null) {
-            voucher = voucherService.getVoucher(request.voucherId());
-            orderRequest = new OrderWithVoucherDecorator(ordinaryPurchaseRequest, voucher);
-        } else {
-            orderRequest = ordinaryPurchaseRequest;
-        }
+    private void sendOrderStatus(OrderTemplate orderRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, Object> data = new HashMap<>();
         data.put("orderId", orderRequest.getId());
         data.put("orderStatus", "Menunggu Konfirmasi");
-
-        orderRequest.setShippingMethod(request.shippingMethod());
-        orderRequest.setResi(resi);
-
         HttpEntity<Map<String,Object>> requestBody = new HttpEntity<>(data, headers);
-        try{
-            restTemplate.postForEntity(StatusAPI.POST_CREATE_STATUS.getUrl(), requestBody,String.class);
-        }
-        catch (Exception e){
+        try {
+            restTemplate.postForEntity(StatusAPI.POST_CREATE_STATUS.getUrl(), requestBody, String.class);
+        } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    private void saveOrder(OrderTemplate orderRequest) {
         orderRepository.save(orderRequest);
     }
 

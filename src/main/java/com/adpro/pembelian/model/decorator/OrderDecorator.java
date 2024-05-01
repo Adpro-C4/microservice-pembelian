@@ -4,7 +4,7 @@ import com.adpro.pembelian.model.entity.OrderTemplate;
 import jakarta.persistence.*;
 
 
-@Entity
+
 public abstract class OrderDecorator extends OrderTemplate {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
