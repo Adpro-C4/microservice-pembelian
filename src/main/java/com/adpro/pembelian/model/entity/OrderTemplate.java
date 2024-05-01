@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "ORDERS")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Order implements Serializable {
+public abstract class OrderTemplate implements Serializable {
     protected String userId;
     protected   String timestamp;
     protected String shippingMethod;
@@ -27,10 +27,10 @@ public abstract class Order implements Serializable {
     protected DTOCustomerDetails customerDetails;
     protected String address;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    protected List<CartItem> cartItems;
+    protected List<CartItemEntity> cartItems;
     @Transient
     @JsonIgnore
-    protected PricingStrategy<CartItem> strategy;
+    protected PricingStrategy<CartItemEntity> strategy;
     protected String price;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

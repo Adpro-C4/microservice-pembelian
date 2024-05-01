@@ -2,14 +2,13 @@ package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.common.ShippingUtility;
 import com.adpro.pembelian.enums.StatusAPI;
-import com.adpro.pembelian.model.entity.Order;
-import com.adpro.pembelian.model.entity.decorator.OrdinaryOrder;
-import com.adpro.pembelian.model.entity.decorator.OrderWithVoucher;
+import com.adpro.pembelian.model.entity.OrderTemplate;
+import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
+import com.adpro.pembelian.model.decorator.OrderWithVoucherDecorator;
 import com.adpro.pembelian.model.dto.*;
 import com.adpro.pembelian.repository.OrderRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import com.adpro.pembelian.service.external.APIVoucherService;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,9 +40,9 @@ public class PurchaseServiceImpl implements  PurchaseService {
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
         DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(request.userId());
-        Order orderRequest = null;
+        OrderTemplate orderRequest = null;
         String resi = ShippingUtility.generateTrackingCode(request.shippingMethod());
-        OrdinaryOrder ordinaryPurchaseRequest = new OrdinaryOrder();
+        OrdinaryOrderEntity ordinaryPurchaseRequest = new OrdinaryOrderEntity();
         ordinaryPurchaseRequest.setUserId(request.userId());
         ordinaryPurchaseRequest.setAddress(request.address());
         ordinaryPurchaseRequest.setTimestamp(iso8601Timestamp);
@@ -59,7 +58,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
         if (request.voucherId() != null) {
             voucher = voucherService.getVoucher(request.voucherId());
-            orderRequest = new OrderWithVoucher(ordinaryPurchaseRequest, voucher);
+            orderRequest = new OrderWithVoucherDecorator(ordinaryPurchaseRequest, voucher);
         } else {
             orderRequest = ordinaryPurchaseRequest;
         }
@@ -88,12 +87,12 @@ public class PurchaseServiceImpl implements  PurchaseService {
     }
 
     @Override
-    public Order viewOrder(String orderId) {
+    public OrderTemplate viewOrder(String orderId) {
         return orderRepository.findById(Long.parseLong(orderId)).orElse(null);
     }
 
     @Override
-    public List<Order> viewAllOrderByUserId(String userId) {
+    public List<OrderTemplate> viewAllOrderByUserId(String userId) {
         return orderRepository.findByUserId(userId);
     }
 

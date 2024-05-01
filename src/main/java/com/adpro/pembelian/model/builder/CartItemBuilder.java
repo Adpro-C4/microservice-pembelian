@@ -1,6 +1,6 @@
 package com.adpro.pembelian.model.builder;
 
-import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 
 public class CartItemBuilder {
     private Long id;
@@ -34,7 +34,7 @@ public class CartItemBuilder {
         return  this;
     }
 
-    public CartItem build(){
-        return new CartItem(this.id,this.productId,this.name,this.quantity,this.price);
+    public CartItemEntity build(){
+        return new CartItemEntity(this.id,this.productId,this.name,this.quantity,this.price);
     }
 }

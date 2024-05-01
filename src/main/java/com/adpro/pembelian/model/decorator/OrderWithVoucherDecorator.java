@@ -1,30 +1,25 @@
-package com.adpro.pembelian.model.entity.decorator;
+package com.adpro.pembelian.model.decorator;
 
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
-import com.adpro.pembelian.model.entity.Order;
+import com.adpro.pembelian.model.entity.OrderTemplate;
 import com.adpro.pembelian.model.dto.DTOVoucher;
-import com.adpro.pembelian.model.entity.CartItem;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
-@Entity
-public class OrderWithVoucher extends OrderDecorator {
+public class OrderWithVoucherDecorator extends OrderDecorator {
     @Embedded
     private DTOVoucher voucher;
 
-    public OrderWithVoucher(Order request, DTOVoucher voucher) {
+    public OrderWithVoucherDecorator(OrderTemplate request, DTOVoucher voucher) {
         super(request);
         this.voucher = voucher;
     }
 
-    public OrderWithVoucher() {
+    public OrderWithVoucherDecorator() {
 
     }
 

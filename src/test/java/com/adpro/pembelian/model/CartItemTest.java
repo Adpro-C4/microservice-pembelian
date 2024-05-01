@@ -1,5 +1,5 @@
 package com.adpro.pembelian.model;
-import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.builder.CartItemBuilder;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +15,7 @@ public class CartItemTest {
         int quantity = 2;
         double price = 10.99;
 
-        CartItem cartItem = new CartItemBuilder()
+        CartItemEntity cartItem = new CartItemBuilder()
                 .withId(id)
                 .withProductId(productId)
                 .withName(name)
@@ -33,7 +33,7 @@ public class CartItemTest {
 
     @Test
     public void testSetNegativePrice(){
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setPrice(-3);
         });
@@ -41,14 +41,14 @@ public class CartItemTest {
 
     @Test
     public void testSetPositivePrice(){
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         cartItem.setPrice(2000);
         assertEquals(2000, cartItem.getPrice() );
     }
 
     @Test
     public  void testZeroPrice(){
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(0);
         });
@@ -57,7 +57,7 @@ public class CartItemTest {
     @Test
     public void testCalculateTotalPrice() {
 
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         cartItem.setProductId("123");
         cartItem.setQuantity(3);
         cartItem.setPrice(2000);
@@ -67,7 +67,7 @@ public class CartItemTest {
 
     @Test
     public void testSetNegativeQuantity() {
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(-3);
         });
@@ -75,7 +75,7 @@ public class CartItemTest {
 
     @Test
     public void testSetZeroQuantity() {
-        CartItem cartItem = new CartItem();
+        CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(0);
         });

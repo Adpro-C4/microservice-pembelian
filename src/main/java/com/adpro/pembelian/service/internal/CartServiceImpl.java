@@ -3,13 +3,12 @@ package com.adpro.pembelian.service.internal;
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
-import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.builder.CartItemBuilder;
-import com.adpro.pembelian.model.entity.ShoppingCart;
+import com.adpro.pembelian.model.entity.ShoppingCartEntity;
 import com.adpro.pembelian.model.builder.ShoppingCartBuilder;
 import com.adpro.pembelian.repository.CartItemRepository;
 import com.adpro.pembelian.repository.ShoppingCartRepository;
-import com.adpro.pembelian.service.internal.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,13 @@ public class CartServiceImpl implements CartService {
     ShoppingCartRepository shoppingCartRepository;
 
     @Override
-    public CartItem createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
-        ShoppingCart shoppingCart = getShoppingCart(cartInformation.userId());
+    public CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
+        ShoppingCartEntity shoppingCart = getShoppingCart(cartInformation.userId());
         if(shoppingCart == null){
             createShoppingCart(cartInformation.userId());
             shoppingCart = getShoppingCart(cartInformation.userId());
         }
-        CartItem item = shoppingCart.getCartItemMap().get(cartInformation.productId());
+        CartItemEntity item = shoppingCart.getCartItemMap().get(cartInformation.productId());
         if(item == null){
             shoppingCart.getCartItemMap().put(cartInformation.productId(),
                     new CartItemBuilder().
@@ -59,13 +58,13 @@ public class CartServiceImpl implements CartService {
     }
     @Override
     public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
-        ShoppingCart shoppingCart = getShoppingCart(information.userId());
+        ShoppingCartEntity shoppingCart = getShoppingCart(information.userId());
         shoppingCart.getCartItemMap().remove(information.productId());
         shoppingCartRepository.save(shoppingCart);
     }
     @Override
-    public List<CartItem> getCartItemsFromShoppingCart(String userId) {
-        ShoppingCart shoppingCart = getShoppingCart(userId);
+    public List<CartItemEntity> getCartItemsFromShoppingCart(String userId) {
+        ShoppingCartEntity shoppingCart = getShoppingCart(userId);
         if(shoppingCart == null){
             throw new RuntimeException("Tidak ada shopping cart yang berasosiasi dengan user dengan id "+ userId);
         }
@@ -73,25 +72,25 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ShoppingCart getShoppingCart(String userId){
+    public ShoppingCartEntity getShoppingCart(String userId){
         return  shoppingCartRepository.findById(Long.parseLong(userId)).orElse(null);
     }
 
     @Override
     public DTOShoppingCartInformation getShoppingCartInformation(String userId) {
-        ShoppingCart shoppingCart = getShoppingCart(userId);
+        ShoppingCartEntity shoppingCart = getShoppingCart(userId);
         if(shoppingCart == null) {
             throw new RuntimeException("Tidak ada shopping cart yang berasosiasi dengan id" + userId);
         }
         return new DTOShoppingCartInformation(shoppingCart.calculateTotalPrice(),
-                shoppingCart.getCartItemMap().values().stream().map(CartItem::toDTO).toList(),
+                shoppingCart.getCartItemMap().values().stream().map(CartItemEntity::toDTO).toList(),
                 userId);
     }
 
 
     @Override
     public void createShoppingCart(String userId) {
-        ShoppingCart cart = getShoppingCart(userId);
+        ShoppingCartEntity cart = getShoppingCart(userId);
         if(cart == null){
             shoppingCartRepository.save(
                     new ShoppingCartBuilder().withCartItems

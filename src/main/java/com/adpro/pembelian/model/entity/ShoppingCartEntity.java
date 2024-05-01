@@ -12,26 +12,26 @@ import java.util.Map;
 @Setter
 @Getter
 @Entity
-public class ShoppingCart {
+public class ShoppingCartEntity {
     @Id
     private Long userId;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "productId")
-    private Map<String, CartItem> cartItemMap;
+    private Map<String, CartItemEntity> cartItemMap;
 
     @Transient
-    private PricingStrategy<CartItem> pricingStrategy;
-    public ShoppingCart(){
+    private PricingStrategy<CartItemEntity> pricingStrategy;
+    public ShoppingCartEntity(){
         this.cartItemMap = new HashMap<>();
         this.pricingStrategy = new CartPricingStrategy();
     }
 
-    public CartItem addItem(CartItem cartItem){
+    public CartItemEntity addItem(CartItemEntity cartItem){
         cartItemMap.put(cartItem.getProductId(), cartItem);
         return cartItem;
     }
-    public void deleteItem(CartItem cartItem){
+    public void deleteItem(CartItemEntity cartItem){
         cartItemMap.remove(cartItem.getProductId());
     }
     public double calculateTotalPrice(){

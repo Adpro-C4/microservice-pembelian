@@ -1,9 +1,9 @@
 package com.adpro.pembelian.model;
 
 import com.adpro.pembelian.model.dto.DTOVoucher;
-import com.adpro.pembelian.model.entity.decorator.OrdinaryOrder;
-import com.adpro.pembelian.model.entity.decorator.OrderWithVoucher;
-import com.adpro.pembelian.model.entity.CartItem;
+import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
+import com.adpro.pembelian.model.decorator.OrderWithVoucherDecorator;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,12 +15,12 @@ public class PurchaseRequestTest {
     @Test
     public void testOrdinaryPurchaseRequestTotalPrice() {
         // Create a sample cart with items
-        List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem(1L, "prod1", "Product 1", 1, 10.0));
-        cartItems.add(new CartItem(2L, "prod2", "Product 2", 1, 20.0));
+        List<CartItemEntity> cartItems = new ArrayList<>();
+        cartItems.add(new CartItemEntity(1L, "prod1", "Product 1", 1, 10.0));
+        cartItems.add(new CartItemEntity(2L, "prod2", "Product 2", 1, 20.0));
 
         // Create an ordinary purchase request
-        OrdinaryOrder request = new OrdinaryOrder();
+        OrdinaryOrderEntity request = new OrdinaryOrderEntity();
         request.setCartItems(cartItems);
 
         // Check if the total price is calculated correctly
@@ -30,12 +30,12 @@ public class PurchaseRequestTest {
     @Test
     public void testPurchaseRequestWithVoucherTotalPrice() {
         // Create a sample cart with items
-        List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem(1L, "prod1", "Product 1", 1, 10.0));
-        cartItems.add(new CartItem(2L, "prod2", "Product 2", 1, 20.0));
+        List<CartItemEntity> cartItems = new ArrayList<>();
+        cartItems.add(new CartItemEntity(1L, "prod1", "Product 1", 1, 10.0));
+        cartItems.add(new CartItemEntity(2L, "prod2", "Product 2", 1, 20.0));
 
         // Create an ordinary purchase request
-        OrdinaryOrder ordinaryRequest = new OrdinaryOrder();
+        OrdinaryOrderEntity ordinaryRequest = new OrdinaryOrderEntity();
         ordinaryRequest.setCartItems(cartItems);
 
         // Create a voucher
@@ -43,7 +43,7 @@ public class PurchaseRequestTest {
         voucher.setVoucherDiscount(0.1); // 10% discount
 
         // Create a purchase request with voucher
-        OrderWithVoucher requestWithVoucher = new OrderWithVoucher(ordinaryRequest, voucher);
+        OrderWithVoucherDecorator requestWithVoucher = new OrderWithVoucherDecorator(ordinaryRequest, voucher);
 
         // Check if the total price is calculated correctly with the voucher applied
         assertEquals(27.0, requestWithVoucher.getTotalPrice());

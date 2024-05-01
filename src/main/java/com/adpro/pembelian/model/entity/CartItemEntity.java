@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class CartItem {
+public class CartItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +18,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Order order;
+    private OrderTemplate order;
 
     public DTOCartItem toDTO() {
         DTOCartItem dto = new DTOCartItem();
@@ -32,11 +32,11 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private ShoppingCart shoppingCart;
+    private ShoppingCartEntity shoppingCart;
 
 
-    public CartItem(){}
-    public CartItem(Long id, String productId, String name, int quantity, double price){
+    public CartItemEntity(){}
+    public CartItemEntity(Long id, String productId, String name, int quantity, double price){
         this.id = id;
         this.productId = productId;
         this.name = name;

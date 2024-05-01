@@ -3,17 +3,17 @@ package com.adpro.pembelian.service.internal;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
-import com.adpro.pembelian.model.entity.CartItem;
-import com.adpro.pembelian.model.entity.ShoppingCart;
+import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.model.entity.ShoppingCartEntity;
 
 import java.util.List;
 
 public interface CartService {
-    CartItem createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation);
+    CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation);
     void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information);
-    List<CartItem> getCartItemsFromShoppingCart(String userId);
+    List<CartItemEntity> getCartItemsFromShoppingCart(String userId);
     void createShoppingCart(String userId);
-    ShoppingCart getShoppingCart(String userId);
+    ShoppingCartEntity getShoppingCart(String userId);
 
     DTOShoppingCartInformation getShoppingCartInformation(String userId);
 

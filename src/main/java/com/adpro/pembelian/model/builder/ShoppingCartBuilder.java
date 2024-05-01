@@ -1,13 +1,13 @@
 package com.adpro.pembelian.model.builder;
 
-import com.adpro.pembelian.model.entity.CartItem;
-import com.adpro.pembelian.model.entity.ShoppingCart;
+import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.model.entity.ShoppingCartEntity;
 
 import java.util.Map;
 
 public  class ShoppingCartBuilder {
     private Long userId;
-    private Map<String, CartItem> cartItemMap;
+    private Map<String, CartItemEntity> cartItemMap;
 
     public ShoppingCartBuilder() {
     }
@@ -17,13 +17,13 @@ public  class ShoppingCartBuilder {
         return this;
     }
 
-    public ShoppingCartBuilder withCartItems(Map<String, CartItem> cartItemMap){
+    public ShoppingCartBuilder withCartItems(Map<String, CartItemEntity> cartItemMap){
         this.cartItemMap = cartItemMap;
         return  this;
     }
 
-    public ShoppingCart build() {
-        ShoppingCart shoppingCart = new ShoppingCart();
+    public ShoppingCartEntity build() {
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         shoppingCart.setUserId(userId);
         shoppingCart.setCartItemMap(cartItemMap);
         return shoppingCart;
