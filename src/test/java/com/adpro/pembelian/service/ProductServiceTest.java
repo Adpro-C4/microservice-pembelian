@@ -25,6 +25,7 @@ public class ProductServiceTest {
     @InjectMocks
     private APIProductServiceImpl productService;
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetProductFromAPI() {
 
@@ -39,6 +40,7 @@ public class ProductServiceTest {
         assertEquals("Kursi", product.getProductName());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetAllProductFromAPI() {
         JsonNode jsonNode = createSampleJsonNode();

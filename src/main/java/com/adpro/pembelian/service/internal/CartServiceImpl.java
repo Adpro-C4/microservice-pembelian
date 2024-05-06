@@ -11,7 +11,6 @@ import com.adpro.pembelian.model.builder.ShoppingCartBuilder;
 import com.adpro.pembelian.repository.CartItemRepository;
 import com.adpro.pembelian.repository.ShoppingCartRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
-import com.adpro.pembelian.service.external.APICustomerDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +39,13 @@ public class CartServiceImpl implements CartService {
         }
         CartItemEntity item = shoppingCart.getCartItemMap().get(cartInformation.productId());
         if(item == null){
-            shoppingCart.getCartItemMap().put(cartInformation.productId(),
-                    new CartItemBuilder().
-                            withName(cartInformation.name()).
-                            withPrice(Double.parseDouble(cartInformation.price())).
-                            withProductId(cartInformation.productId()).
-                            withQuantity(Integer.parseInt(cartInformation.quantity())).
-                            build());
+            item = new CartItemBuilder().
+            withName(cartInformation.name()).
+            withPrice(Double.parseDouble(cartInformation.price())).
+            withProductId(cartInformation.productId()).
+            withQuantity(Integer.parseInt(cartInformation.quantity())).
+            build();
+            shoppingCart.getCartItemMap().put(cartInformation.productId(), item);
         }
         else{
             item.setQuantity(Integer.parseInt(cartInformation.quantity()));

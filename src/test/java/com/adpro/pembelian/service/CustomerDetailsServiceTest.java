@@ -27,11 +27,13 @@ public class CustomerDetailsServiceTest {
     @InjectMocks
     private APICustomerDetailsServiceImpl customerDetailsService;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPI() {
 

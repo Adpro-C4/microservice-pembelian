@@ -18,6 +18,7 @@ class BackendApplicationTests {
         assertNotNull(backendApplication);
     }
 
+    @SuppressWarnings("static-access")
     @Test
     void testSpringApplicationRun() {
          assertDoesNotThrow(() -> backendApplication.main(new String[] {}));

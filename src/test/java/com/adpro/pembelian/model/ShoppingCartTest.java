@@ -69,7 +69,6 @@ public class ShoppingCartTest {
     @Test
     void testUpdateCartItemFailed() {
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
-        CartItemEntity cartItem = new CartItemEntity(1L, "PROD123", "Product Name", 1, 10.0);
         assertThrows(NullPointerException.class, () -> shoppingCart.addItem(null));
     }
 }

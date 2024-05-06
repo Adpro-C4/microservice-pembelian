@@ -4,7 +4,6 @@ import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.model.entity.OrderTemplate;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 

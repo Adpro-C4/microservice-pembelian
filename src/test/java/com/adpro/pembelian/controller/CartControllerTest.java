@@ -5,9 +5,6 @@ import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
 import com.adpro.pembelian.service.internal.CartService;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import scala.util.control.Exception;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +51,7 @@ class CartControllerTest {
         when(cartService.getShoppingCartInformation(anyString())).thenReturn(cartInformation);
         ResponseEntity<Object> responseEntity = cartController.getShoppingCartInformation(TEST_USER_ID);
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("message");
@@ -71,6 +69,7 @@ class CartControllerTest {
 
         // Verify
         assert responseEntity.getStatusCode() == HttpStatus.NOT_FOUND;
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("status");
@@ -86,6 +85,7 @@ class CartControllerTest {
                 "10.0", "2");
         ResponseEntity<Object> responseEntity = cartController.updateCartItemOnShoppingCart(cartItemUpdateInformation);
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("message");
@@ -100,6 +100,7 @@ class CartControllerTest {
                 TEST_PRODUCT_ID, "10.0", "2");
         ResponseEntity<Object> responseEntity = cartController.updateCartItemOnShoppingCart(cartItemUpdateInformation);
         Assertions.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("status");
@@ -115,6 +116,7 @@ class CartControllerTest {
         doNothing().when(cartService).deleteCartItemFromShoppingCart(any(DTOCartItemDeletionInformation.class));
         ResponseEntity<Object> responseEntity = cartController.deleteCartItemFromShoppingCart(deletionInformation);
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("message");
