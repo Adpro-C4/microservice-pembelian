@@ -42,15 +42,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     @Override
     public void createPurchaseRequest(DTOPurchaseInformation request) {
-        if(request.cartItems().isEmpty() || request.cartItems() == null){
-            throw new IllegalArgumentException("order items tidak boleh kosong");
-        }
-        if(customerDetailsService.getUserDetailsAPI(request.userId()) == null){
-            throw new NoSuchElementException("User yang melakukan order tidak ditemukan");
-        }
-        if(!ShippingMethod.contains(request.shippingMethod())){
-            throw new IllegalArgumentException("Metode pengiriman tidak didukung");
-        }
+        validatePurchaseRequest(request);
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
         DTOCustomerDetails customerDetails = getCustomerDetails(request.userId());
@@ -58,6 +50,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
         OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetails, resi);
         sendOrderStatus(orderRequest);
         saveOrder(orderRequest);
+    }
+
+    private void validatePurchaseRequest(DTOPurchaseInformation request) {
+        if (request.cartItems().isEmpty() || request.cartItems() == null) {
+            throw new IllegalArgumentException("order items tidak boleh kosong");
+        }
+        if (customerDetailsService.getUserDetailsAPI(request.userId()) == null) {
+            throw new NoSuchElementException("User yang melakukan order tidak ditemukan");
+        }
+        if (!ShippingMethod.contains(request.shippingMethod())) {
+            throw new IllegalArgumentException("Metode pengiriman tidak didukung");
+        }
     }
 
     private DTOCustomerDetails getCustomerDetails(String userId) {
