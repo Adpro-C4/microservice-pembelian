@@ -29,6 +29,7 @@ sonarqube {
         property("sonar.projectKey", "Adpro-C4_microservice-pembelian")
         property("sonar.organization", "adpro-c4")
         property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.junit.reportPaths", "build/test-results/test")
     }
 }
 
@@ -72,10 +73,6 @@ dependencies {
 	testImplementation("junit:junit")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
-
-jacoco {
-}
-
 
 
 dependencyManagement {
