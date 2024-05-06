@@ -3,7 +3,6 @@ package com.adpro.pembelian.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -98,7 +97,7 @@ public class CartServiceTest {
         shoppingCart.setCartItemMap(null);
 
         // Mock repository behavior
-        when(shoppingCartRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(null)); // Return null to simulate cart not found
+        when(shoppingCartRepository.findById(any(Long.class))).thenReturn(Optional.empty()); // Return Optional.empty() to simulate cart not found
         when(shoppingCartRepository.save(any(ShoppingCartEntity.class))).thenReturn(shoppingCart);
 
         // Test method
@@ -106,8 +105,8 @@ public class CartServiceTest {
 
         // Verify repository interactions
         verify(shoppingCartRepository, times(1)).findById(any(Long.class));
-
     }
+
 
     @Test
     void testCreateOrUpdateCartItemZeroOrNegative() {
@@ -168,24 +167,21 @@ public class CartServiceTest {
     void testGetShoppingCartInformationExists() {
         // Mock data
         String userId = TEST_USER_ID;
-        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
+        Optional<ShoppingCartEntity> shoppingCart = Optional.ofNullable(new ShoppingCartEntity());
         Map<String, CartItemEntity> cartItemMap = new HashMap<>();
         cartItemMap.put(TEST_PRODUCT_ID, new CartItemEntity());
-        shoppingCart.setCartItemMap(cartItemMap);
+        shoppingCart.get().setCartItemMap(cartItemMap);
 
         // Mock repository behavior
-        when(cartService.getShoppingCart(anyString())).thenReturn(shoppingCart);
+        when(shoppingCartRepository.findById(Long.parseLong(userId))).thenReturn(shoppingCart);
 
         // Test method
         DTOShoppingCartInformation cartInformation = cartService.getShoppingCartInformation(userId);
 
         // Verify that the DTOShoppingCartInformation is created with correct data
         assertEquals(0.0, cartInformation.totalPrice()); // Adjust this value according to your test case
-        assertEquals(2, cartInformation.dtoCartItemList().size()); // Adjust this value according to your test case
+        assertEquals(1, cartInformation.dtoCartItemList().size()); // Adjust this value according to your test case
         assertEquals(userId, cartInformation.userId());
-
-        // Verify repository interactions
-        verify(cartService, times(1)).getShoppingCart(userId);
     }
 
     @Test
@@ -194,13 +190,10 @@ public class CartServiceTest {
         String userId = TEST_USER_ID;
 
         // Mock repository behavior
-        when(cartService.getShoppingCart(anyString())).thenReturn(null); // Return null to simulate cart not found
+        when(shoppingCartRepository.findById(Long.parseLong(userId))).thenReturn(Optional.empty()); // Return Optional.empty() to simulate cart not found
 
         // Assert that NoSuchElementException is thrown
         assertThrows(NoSuchElementException.class, () -> cartService.getShoppingCartInformation(userId));
-
-        // Verify repository interactions
-        verify(cartService, times(1)).getShoppingCartInformation(userId);
     }
 
     @Test
@@ -208,25 +201,22 @@ public class CartServiceTest {
         // Mock data
         String userId = TEST_USER_ID;
         DTOCustomerDetails customerDetails = new DTOCustomerDetails(); // Mock customer details
-        ShoppingCartEntity shoppingCart = null; // Mock shopping cart not found
 
         // Mock repository behavior
         when(customerDetailsService.getUserDetailsAPI(userId)).thenReturn(customerDetails); // Return customer details to simulate user exists
-        when(cartService.getShoppingCart(userId)).thenReturn(shoppingCart); // Return null to simulate cart not found
 
         // Test method
         cartService.createShoppingCart(userId);
 
         // Verify repository interactions
         verify(customerDetailsService, times(1)).getUserDetailsAPI(userId);
-        verify(cartService, times(1)).getShoppingCart(userId);
         verify(shoppingCartRepository, times(1)).save(any(ShoppingCartEntity.class));
     }
 
     @Test
     void testCreateShoppingCartUserNotExist() {
         // Mock data
-        String userId = "testUserId";
+        String userId = TEST_USER_ID;
 
         // Mock repository behavior
         when(customerDetailsService.getUserDetailsAPI(userId)).thenReturn(null); // Return null to simulate user not found
@@ -236,7 +226,6 @@ public class CartServiceTest {
 
         // Verify repository interactions
         verify(customerDetailsService, times(1)).getUserDetailsAPI(userId);
-        verify(cartService, never()).getShoppingCart(userId); // Ensure that getShoppingCart is never called
         verify(shoppingCartRepository, never()).save(any(ShoppingCartEntity.class)); // Ensure that save method is never called
     }
 
@@ -252,13 +241,12 @@ public class CartServiceTest {
         shoppingCart.setCartItemMap(cartItemMap);
 
         // Mock repository behavior
-        when(cartService.getShoppingCart(userId)).thenReturn(shoppingCart);
+        when(shoppingCartRepository.findById(Long.parseLong(userId))).thenReturn(Optional.of(shoppingCart));
 
         // Test method
         cartService.deleteCartItemFromShoppingCart(cartInformation);
 
         // Verify repository interactions
-        verify(cartService, times(1)).getShoppingCart(userId);
         verify(shoppingCartRepository, times(1)).save(shoppingCart);
     }
 
@@ -270,13 +258,12 @@ public class CartServiceTest {
         DTOCartItemDeletionInformation cartInformation = new DTOCartItemDeletionInformation(userId, productId);
 
         // Mock repository behavior
-        when(cartService.getShoppingCart(userId)).thenReturn(null); // Return null to simulate cart not found
+        when(shoppingCartRepository.findById(Long.parseLong(userId))).thenReturn(Optional.empty()); // Return null to simulate cart not found
 
         // Assert that NoSuchElementException is thrown
         assertThrows(NoSuchElementException.class, () -> cartService.deleteCartItemFromShoppingCart(cartInformation));
 
         // Verify repository interactions
-        verify(cartService, times(1)).getShoppingCart(userId);
         verify(shoppingCartRepository, never()).save(any(ShoppingCartEntity.class)); // Ensure that save method is never called
     }
 

@@ -32,6 +32,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
+        if(Long.parseLong(cartInformation.quantity()) <=0){
+            throw new IllegalArgumentException("quantity harus bilangan positif");
+        }
         ShoppingCartEntity shoppingCart = getShoppingCart(cartInformation.userId());
         if(shoppingCart == null){
             createShoppingCart(cartInformation.userId());
@@ -65,6 +68,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
         ShoppingCartEntity shoppingCart = getShoppingCart(information.userId());
+        if(shoppingCart == null){
+            throw new NoSuchElementException();
+        }
         if(! shoppingCart.getCartItemMap().containsKey(information.productId())){
             throw new NoSuchElementException();
         }
