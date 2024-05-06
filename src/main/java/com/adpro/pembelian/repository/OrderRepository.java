@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<OrderTemplate, Long> {
     List<OrderTemplate> findByUserId(String userId);
+    List<OrderTemplate> deleteByUserId(String userId);
 }

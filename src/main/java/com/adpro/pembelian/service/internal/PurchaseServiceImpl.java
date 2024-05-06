@@ -39,6 +39,9 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     @Override
     public void createPurchaseRequest(DTOPurchaseInformation request) {
+        if(request.cartItems().isEmpty() || request.cartItems() == null){
+            throw new IllegalArgumentException("Pesanan tidak boleh kosong");
+        }
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
         DTOCustomerDetails customerDetails = getCustomerDetails(request.userId());
@@ -110,6 +113,11 @@ public class PurchaseServiceImpl implements  PurchaseService {
     @Override
     public List<OrderTemplate> viewAllOrderByUserId(String userId) {
         return orderRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void removePurchaseRequestByUserId(String userId) {
+        orderRepository.deleteByUserId(userId);
     }
 
 }
