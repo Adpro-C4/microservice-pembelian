@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
-import com.adpro.pembelian.enums.ShippingMethod;
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.model.dto.DTOPurchaseInformation;
 import com.adpro.pembelian.model.entity.OrderTemplate;
@@ -65,13 +66,13 @@ public class PurchaseServiceTest {
     void createOrderSuccess(){
         DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Arrays.asList(TEST_PRODUCT_ID_1, TEST_PRODUCT_ID_2),
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
+        when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
         purchaseService.createPurchaseRequest(request);
         verify(orderRepository, times(1)).save(any());
     }
 
     @Test
     void createOrderFailedBcsProductEmpty() {
-        when(cartService.getCartItemsFromShoppingCart(TEST_USER_ID)).thenReturn(Collections.emptyList());
         DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Collections.emptyList(),
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
         assertThrows(IllegalArgumentException.class, () -> purchaseService.createPurchaseRequest(request));
@@ -81,7 +82,8 @@ public class PurchaseServiceTest {
     @Test
     void createOrderFailedBcsUserNotFound() {
         when(customerDetailsService.getUserDetailsAPI(TEST_USER_ID)).thenReturn(null);
-        DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Collections.emptyList(),
+        DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, 
+        new ArrayList<>(Arrays.asList("ABC", "XYZ")),
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
         assertThrows(NoSuchElementException.class, () -> purchaseService.createPurchaseRequest(request));
         verify(orderRepository, never()).save(any());
@@ -89,18 +91,11 @@ public class PurchaseServiceTest {
 
     @Test
     void createOrderFailedBcsInvalidShipping() {
-        // Mock behavior for customerDetailsService to return a valid DTOCustomerDetails
         DTOCustomerDetails customerDetails = new DTOCustomerDetails();
         when(customerDetailsService.getUserDetailsAPI(TEST_USER_ID)).thenReturn(customerDetails);
-
-        // Mock data
         DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Arrays.asList("product1", "product2"),
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD_INVALID);
-
-        // Test method and assert that it throws IllegalArgumentException
         assertThrows(IllegalArgumentException.class, () -> purchaseService.createPurchaseRequest(request));
-
-        // Verify that no order is saved
         verify(orderRepository, never()).save(any());
     }
     @Test
