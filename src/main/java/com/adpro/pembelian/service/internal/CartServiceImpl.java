@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -59,6 +60,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
         ShoppingCartEntity shoppingCart = getShoppingCart(information.userId());
+
         shoppingCart.getCartItemMap().remove(information.productId());
         shoppingCartRepository.save(shoppingCart);
     }

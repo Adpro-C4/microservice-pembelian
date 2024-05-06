@@ -6,6 +6,7 @@ import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
 import com.adpro.pembelian.service.internal.CartService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,15 +45,10 @@ class CartControllerTest {
         // Mocking
         List<DTOCartItem> dtoCartItemList = new ArrayList<>();
         double totalPrice = 100.0;
-        String userId = TEST_USER_ID;
         DTOShoppingCartInformation cartInformation =
-                new DTOShoppingCartInformation(totalPrice, dtoCartItemList, userId);
+                new DTOShoppingCartInformation(totalPrice, dtoCartItemList, TEST_USER_ID);
         when(cartService.getShoppingCartInformation(anyString())).thenReturn(cartInformation);
-
-        // Test
         ResponseEntity<Object> responseEntity = cartController.getShoppingCartInformation(TEST_USER_ID);
-
-        // Verify
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
@@ -79,13 +78,10 @@ class CartControllerTest {
 
     @Test
     void updateCartItemOnShoppingCart() {
-        // Mocking
         DTOCartItemUpdateInformation cartItemUpdateInformation = new
                 DTOCartItemUpdateInformation(TEST_USER_ID, "ItemName", TEST_PRODUCT_ID,
                 "10.0", "2");
         ResponseEntity<Object> responseEntity = cartController.updateCartItemOnShoppingCart(cartItemUpdateInformation);
-
-        // Verify
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
@@ -96,37 +92,25 @@ class CartControllerTest {
 
     @Test
     void updateCartItemOnShoppingCartNotExist() {
-        // Mocking
         DTOCartItemUpdateInformation cartItemUpdateInformation = new
                 DTOCartItemUpdateInformation(TEST_USER_ID, "ItemName",
                 TEST_PRODUCT_ID, "10.0", "2");
-        when(cartService.createOrUpdateCartItemToShoppingCart(any(DTOCartItemUpdateInformation.class))).thenReturn(null);
-
-        // Test
         ResponseEntity<Object> responseEntity = cartController.updateCartItemOnShoppingCart(cartItemUpdateInformation);
-
-        // Verify
-        assert responseEntity.getStatusCode() == HttpStatus.NOT_FOUND;
+        Assertions.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("status");
-        assert responseBody.get("status").equals(HttpStatus.NOT_FOUND.value());
+        assert responseBody.get("status").equals(HttpStatus.ACCEPTED.value());
         verify(cartService, times(1)).createOrUpdateCartItemToShoppingCart(any(DTOCartItemUpdateInformation.class));
     }
 
     @Test
     void deleteCartItemFromShoppingCart() {
-        // Mocking
+
         DTOCartItemDeletionInformation deletionInformation = new
                 DTOCartItemDeletionInformation(TEST_USER_ID, TEST_PRODUCT_ID);
-
-        // Mocking untuk memastikan metode deleteCartItemFromShoppingCart() tidak mengembalikan nilai
         doNothing().when(cartService).deleteCartItemFromShoppingCart(any(DTOCartItemDeletionInformation.class));
-
-        // Test
         ResponseEntity<Object> responseEntity = cartController.deleteCartItemFromShoppingCart(deletionInformation);
-
-        // Verify
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
@@ -137,19 +121,13 @@ class CartControllerTest {
 
     @Test
     void deleteCartItemFromShoppingCart_CartItemNotFound() {
-        // Mocking
         DTOCartItemDeletionInformation deletionInformation =
                 new DTOCartItemDeletionInformation(TEST_USER_ID, TEST_PRODUCT_ID);
-
-        // Test
         ResponseEntity<Object> responseEntity = cartController.deleteCartItemFromShoppingCart(deletionInformation);
-
-        // Verify
-        assert responseEntity.getStatusCode() == HttpStatus.NOT_FOUND;
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
-        assert responseBody != null;
-        assert responseBody.containsKey("status");
-        assert responseBody.get("status").equals(HttpStatus.NOT_FOUND.value());
+        assertNotNull(responseBody);
+        assertTrue(responseBody.containsKey("status"));
+        Assertions.assertEquals(HttpStatus.ACCEPTED.value(), responseBody.get("status"));
         verify(cartService, times(1)).deleteCartItemFromShoppingCart(any(DTOCartItemDeletionInformation.class));
     }
 

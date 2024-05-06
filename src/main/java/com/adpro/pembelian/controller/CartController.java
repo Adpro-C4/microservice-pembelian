@@ -4,6 +4,7 @@ import com.adpro.pembelian.common.ResponseHandler;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
+import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.service.internal.CartService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/shopping-cart")
@@ -22,6 +24,10 @@ public class CartController {
     @GetMapping("/data/{id}")
     public ResponseEntity<Object> getShoppingCartInformation(@PathVariable String id){
         DTOShoppingCartInformation information = cartService.getShoppingCartInformation(id);
+        if(information == null){
+            String message = "Data shopping cart tidak ditemukan!";
+            return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, new HashMap<>());
+        }
         Map<String,Object> response = new HashMap<>();
         String message = "berhasil mendapatkan data shopping cart";
         response.put("message", message);
@@ -32,11 +38,17 @@ public class CartController {
     }
     @PostMapping("/update")
     public ResponseEntity<Object> updateCartItemOnShoppingCart(@RequestBody DTOCartItemUpdateInformation cartItemUpdateInformation){
-        cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);
-        Map<String, Object> response = new HashMap<>();
-        String message = "Sukses mengupdate cart item";
-        response.put("message", message);
-        return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        try{
+            CartItemEntity entity = cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);
+            System.out.println(entity);
+            Map<String, Object> response = new HashMap<>();
+            String message = "Sukses mengupdate cart item";
+            response.put("message", message);
+            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        }catch (NoSuchElementException exception){
+            String message = "Cart item tidak ditemukan";
+            return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, exception);
+        }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteCartItemFromShoppingCart(@RequestBody DTOCartItemDeletionInformation information){
