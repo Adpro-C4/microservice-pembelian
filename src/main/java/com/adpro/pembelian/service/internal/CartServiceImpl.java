@@ -32,39 +32,60 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
-        if(Long.parseLong(cartInformation.quantity()) <=0){
-            throw new IllegalArgumentException("quantity harus bilangan positif");
+        validateQuantity(cartInformation.quantity());
+
+        ShoppingCartEntity shoppingCart = findOrCreateShoppingCart(cartInformation.userId());
+        CartItemEntity item = findOrCreateCartItem(shoppingCart, cartInformation);
+        updateCartItem(item, cartInformation);
+
+        if (item.getQuantity() == 0) {
+            deleteCartItemFromShoppingCart(new DTOCartItemDeletionInformation(cartInformation.userId(), 
+            cartInformation.productId()));
         }
-        ShoppingCartEntity shoppingCart = getShoppingCart(cartInformation.userId());
-        if(shoppingCart == null){
-            createShoppingCart(cartInformation.userId());
-            shoppingCart = getShoppingCart(cartInformation.userId());
+
+        shoppingCartRepository.save(shoppingCart);
+        return item;
+    }
+
+    private void validateQuantity(String quantity) {
+        if (Long.parseLong(quantity) <= 0) {
+            throw new IllegalArgumentException("Quantity harus bilangan positif");
         }
+    }
+
+    private ShoppingCartEntity findOrCreateShoppingCart(String userId) {
+        ShoppingCartEntity shoppingCart = getShoppingCart(userId);
+        if (shoppingCart == null) {
+            createShoppingCart(userId);
+            shoppingCart = getShoppingCart(userId);
+        }
+        return shoppingCart;
+    }
+
+    private CartItemEntity findOrCreateCartItem(ShoppingCartEntity shoppingCart, DTOCartItemUpdateInformation cartInformation) {
         CartItemEntity item = shoppingCart.getCartItemMap().get(cartInformation.productId());
-        if(item == null){
-            item = new CartItemBuilder().
-            withName(cartInformation.name()).
-            withPrice(Double.parseDouble(cartInformation.price())).
-            withProductId(cartInformation.productId()).
-            withQuantity(Integer.parseInt(cartInformation.quantity())).
-            build();
+        if (item == null) {
+            item = createCartItem(cartInformation);
             shoppingCart.getCartItemMap().put(cartInformation.productId(), item);
         }
-        else{
-            item.setQuantity(Integer.parseInt(cartInformation.quantity()));
-            item.setName(cartInformation.name());
-            item.setPrice(Double.parseDouble(cartInformation.price()));
-        }
-        assert item != null;
-        if(item.getQuantity() == 0){
-            deleteCartItemFromShoppingCart(
-                    new DTOCartItemDeletionInformation
-                            (cartInformation.userId(),
-                                    cartInformation.productId()));
-        }
-        shoppingCartRepository.save(shoppingCart);
-        return  item;
+        return item;
     }
+
+    private CartItemEntity createCartItem(DTOCartItemUpdateInformation cartInformation) {
+        return new CartItemBuilder()
+                .withName(cartInformation.name())
+                .withPrice(Double.parseDouble(cartInformation.price()))
+                .withProductId(cartInformation.productId())
+                .withQuantity(Integer.parseInt(cartInformation.quantity()))
+                .build();
+    }
+
+    private void updateCartItem(CartItemEntity item, DTOCartItemUpdateInformation cartInformation) {
+        item.setQuantity(Integer.parseInt(cartInformation.quantity()));
+        item.setName(cartInformation.name());
+        item.setPrice(Double.parseDouble(cartInformation.price()));
+    }
+
     @Override
     public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
         ShoppingCartEntity shoppingCart = getShoppingCart(information.userId());
