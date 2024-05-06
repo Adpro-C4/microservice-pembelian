@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and SonarCloud Scan
         run: |
-          ./gradlew build jacocoTestReport sonar \
+          ./gradlew test jacocoTestReport sonar \
             -Dsonar.projectKey=Adpro-C4_microservice-pembelian \
             -Dsonar.organization=adpro-c4 \
             -Dsonar.host.url=https://sonarcloud.io \
