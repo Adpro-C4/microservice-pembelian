@@ -24,6 +24,14 @@ repositories {
 	mavenCentral()
 }
 
+sonarqube {
+    properties {
+        property("sonar.projectKey", "Adpro-C4_microservice-pembelian")
+        property("sonar.organization", "adpro-c4")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
+}
+
 extra["springModulithVersion"] = "1.1.2"
 
 dependencies {
@@ -87,6 +95,10 @@ tasks.withType<JacocoReport> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.named("sonarqube") {
+    dependsOn("test")
 }
 
 
