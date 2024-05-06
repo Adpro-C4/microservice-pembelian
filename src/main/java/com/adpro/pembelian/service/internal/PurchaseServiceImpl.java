@@ -1,6 +1,7 @@
 package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.common.ShippingUtility;
+import com.adpro.pembelian.enums.ShippingMethod;
 import com.adpro.pembelian.enums.StatusAPI;
 import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.OrderTemplate;
@@ -22,6 +23,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 public class PurchaseServiceImpl implements  PurchaseService {
@@ -36,11 +38,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     @Autowired
     CartService cartService;
+    
 
     @Override
     public void createPurchaseRequest(DTOPurchaseInformation request) {
         if(request.cartItems().isEmpty() || request.cartItems() == null){
-            throw new IllegalArgumentException("Pesanan tidak boleh kosong");
+            throw new IllegalArgumentException("order items tidak boleh kosong");
+        }
+        if(customerDetailsService.getUserDetailsAPI(request.userId()) == null){
+            throw new NoSuchElementException("User yang melakukan order tidak ditemukan");
+        }
+        if(!ShippingMethod.contains(request.shippingMethod())){
+            throw new IllegalArgumentException("Metode pengiriman tidak didukung");
         }
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
@@ -102,16 +111,27 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     @Override
     public void removePurchaseRequest(String orderId) {
+        OrderTemplate order = viewOrder(orderId);
+        if(order == null){
+            throw new NoSuchElementException("Order tidak ditemukan");
+        }
         orderRepository.deleteById(Long.parseLong(orderId));
     }
 
     @Override
     public OrderTemplate viewOrder(String orderId) {
-        return orderRepository.findById(Long.parseLong(orderId)).orElse(null);
+        OrderTemplate order = orderRepository.findById(Long.parseLong(orderId)).orElse(null);
+        if(order == null){
+            throw new NoSuchElementException("order tidak ditemukan");
+        }
+        return order;
     }
 
     @Override
     public List<OrderTemplate> viewAllOrderByUserId(String userId) {
+        if(customerDetailsService.getUserDetailsAPI(userId) == null){
+            throw new NoSuchElementException("user sudah dihapus atau tidak ditemukan");
+        }
         return orderRepository.findByUserId(userId);
     }
 
