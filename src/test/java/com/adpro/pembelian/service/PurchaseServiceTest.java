@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -100,53 +99,50 @@ public class PurchaseServiceTest {
     }
     @Test
     void removeOrderExists() {
-        // Mock data
+      
         OrderTemplate order = new OrdinaryOrderEntity();
         when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.of(order));
-        // Test method
+      
         purchaseService.removePurchaseRequest(TEST_ORDER_ID);
-        // Verify that deleteById is called once with the correct argument
+       
         verify(orderRepository, times(1)).deleteById(Long.parseLong(TEST_ORDER_ID));
     }
     @Test
     void removeOrderNotExist() {
-        // Mock behavior for orderRepository to return empty Optional, indicating that order does not exist
+   
         when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.empty());
 
-        // Test method and assert that it throws NoSuchElementException
         assertThrows(NoSuchElementException.class, () -> purchaseService.removePurchaseRequest(TEST_ORDER_ID));
 
-        // Verify that deleteById is never called
+        
         verify(orderRepository, never()).deleteById(anyLong());
     }
     @Test
     void viewUserOrdersSuccess() {
-        // Mock data
+      
         DTOCustomerDetails customerDetails = new DTOCustomerDetails();
         when(customerDetailsService.getUserDetailsAPI(TEST_USER_ID)).thenReturn(customerDetails);
         List<OrderTemplate> orders = List.of(new OrdinaryOrderEntity(), new OrdinaryOrderEntity());
         when(orderRepository.findByUserId(TEST_USER_ID)).thenReturn(orders);
 
-        // Test method
+      
         List<OrderTemplate> result = purchaseService.viewAllOrderByUserId(TEST_USER_ID);
 
-        // Verify that the method returns the expected list of orders
         assertEquals(orders, result);
 
-        // Verify interactions with mocked objects
+     
         verify(customerDetailsService, times(1)).getUserDetailsAPI(TEST_USER_ID);
         verify(orderRepository, times(1)).findByUserId(TEST_USER_ID);
     }
 
     @Test
     void viewUserOrdersUserNotFound() {
-        // Mock behavior for customerDetailsService to return null, indicating that user is not found
+  
         when(customerDetailsService.getUserDetailsAPI(TEST_USER_ID)).thenReturn(null);
 
-        // Test method and assert that it throws NoSuchElementException
+     
         assertThrows(NoSuchElementException.class, () -> purchaseService.viewAllOrderByUserId(TEST_USER_ID));
 
-        // Verify interactions with mocked objects
         verify(customerDetailsService, times(1)).getUserDetailsAPI(TEST_USER_ID);
         verify(orderRepository, never()).findByUserId(anyString());
     }
@@ -154,29 +150,27 @@ public class PurchaseServiceTest {
     
     @Test
     void viewOrderSuccess() {
-        // Mock data
+  
         OrderTemplate order = new OrdinaryOrderEntity();
         when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.of(order));
 
-        // Test method
+   
         OrderTemplate result = purchaseService.viewOrder(TEST_ORDER_ID);
 
-        // Verify that the method returns the expected order
+
         assertEquals(order, result);
 
-        // Verify interactions with mocked objects
         verify(orderRepository, times(1)).findById(Long.parseLong(TEST_ORDER_ID));
     }
 
     @Test
     void viewOrderNotFound() {
-        // Mock behavior for orderRepository to return empty optional, indicating that order is not found
+   
         when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.empty());
 
-        // Test method and assert that it throws NoSuchElementException
+   
         assertThrows(NoSuchElementException.class, () -> purchaseService.viewOrder(TEST_ORDER_ID));
 
-        // Verify interactions with mocked objects
         verify(orderRepository, times(1)).findById(Long.parseLong(TEST_ORDER_ID));
     }
 

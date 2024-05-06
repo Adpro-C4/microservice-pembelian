@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,6 +53,38 @@ public class ProductServiceTest {
         List<DTOProduct> products = productService.getAllProductFromAPI();
 
         assertFalse(products.isEmpty());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetProductFromAPINotFound() {
+        String id = "1";
+
+     
+        when(restTemplate.getForObject(any(String.class), any(Class.class))).thenReturn(null);
+
+        assertThrows(
+                AssertionError.class,
+                () -> productService.getProductFromAPI(id)
+        );
+
+      
+        verify(restTemplate, times(1)).getForObject(any(String.class), any(Class.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetAllProductFromAPINotFound() {
+   
+        when(restTemplate.getForObject(any(String.class), any(Class.class))).thenReturn(null);
+
+        assertThrows(
+                AssertionError.class,
+                () -> productService.getAllProductFromAPI()
+        );
+
+
+        verify(restTemplate, times(1)).getForObject(any(String.class), any(Class.class));
     }
 
     private JsonNode createSampleJsonNode() {

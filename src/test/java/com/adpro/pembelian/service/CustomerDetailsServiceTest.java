@@ -16,8 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 public class CustomerDetailsServiceTest {
 
@@ -57,6 +61,21 @@ public class CustomerDetailsServiceTest {
         assertEquals(phoneNumber, customerDetails.getPhoneNumber());
         assertEquals(username, customerDetails.getUsername());
         assertEquals(userId, customerDetails.getUserId());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testGetUserDetailsAPIUserNotFound() {
+        String userId = "123";
+        when(restTemplate.getForEntity(any(String.class), any(Class.class)))
+                .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+        assertThrows(
+                AssertionError.class,
+                () -> customerDetailsService.getUserDetailsAPI(userId)
+        );
+
+        verify(restTemplate, times(1)).getForEntity(any(String.class), any(Class.class));
     }
 
     private JsonNode createSampleJsonNode(String name, String email, String phoneNumber, String username) {
