@@ -87,6 +87,11 @@ public class CartServiceImpl implements CartService {
                 userId);
     }
 
+    @Override
+    public void deleteShoppingCart(String userId) {
+        shoppingCartRepository.deleteById(Long.valueOf(userId));
+    }
+
 
     @Override
     public void createShoppingCart(String userId) {

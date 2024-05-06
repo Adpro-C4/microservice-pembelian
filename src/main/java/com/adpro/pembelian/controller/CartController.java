@@ -55,6 +55,4 @@ public class CartController {
         response.put("message", message);
         return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
     }
-
-
 }

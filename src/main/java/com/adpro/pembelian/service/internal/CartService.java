@@ -17,4 +17,6 @@ public interface CartService {
 
     DTOShoppingCartInformation getShoppingCartInformation(String userId);
 
+    void deleteShoppingCart(String userId);
+
 }
