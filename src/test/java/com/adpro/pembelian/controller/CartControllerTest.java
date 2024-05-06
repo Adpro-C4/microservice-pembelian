@@ -5,6 +5,9 @@ import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
 import com.adpro.pembelian.service.internal.CartService;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import scala.util.control.Exception;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,11 +20,12 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class CartControllerTest {
@@ -60,9 +64,8 @@ class CartControllerTest {
 
     @Test
     void getShoppingCartInformationNotExist() {
-        // Mocking
-        when(cartService.getShoppingCartInformation(anyString())).thenReturn(null);
-
+        
+        doThrow(new NoSuchElementException()).when(cartService).getShoppingCartInformation(TEST_USER_ID);
         // Test
         ResponseEntity<Object> responseEntity = cartController.getShoppingCartInformation(TEST_USER_ID);
 
@@ -123,11 +126,13 @@ class CartControllerTest {
     void deleteCartItemFromShoppingCart_CartItemNotFound() {
         DTOCartItemDeletionInformation deletionInformation =
                 new DTOCartItemDeletionInformation(TEST_USER_ID, TEST_PRODUCT_ID);
+        doThrow(new NoSuchElementException()).when(cartService).deleteCartItemFromShoppingCart(deletionInformation);
         ResponseEntity<Object> responseEntity = cartController.deleteCartItemFromShoppingCart(deletionInformation);
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assertNotNull(responseBody);
         assertTrue(responseBody.containsKey("status"));
-        Assertions.assertEquals(HttpStatus.ACCEPTED.value(), responseBody.get("status"));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), responseBody.get("status"));
         verify(cartService, times(1)).deleteCartItemFromShoppingCart(any(DTOCartItemDeletionInformation.class));
     }
 
@@ -137,17 +142,17 @@ class CartControllerTest {
         JsonNode node = mock(JsonNode.class);
         when(node.get("userId")).thenReturn(mock(JsonNode.class));
         when(node.get("userId").asText()).thenReturn(TEST_USER_ID);
-
         // Test
         ResponseEntity<Object> responseEntity = cartController.createShoppingCart(node);
-
         // Verify
         assert responseEntity.getStatusCode() == HttpStatus.ACCEPTED;
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("message");
         verify(cartService, times(1)).createShoppingCart(anyString());
     }
+
 
     @Test
     void createShoppingCart_CreationUserNotExist() {
@@ -155,10 +160,16 @@ class CartControllerTest {
         JsonNode node = mock(JsonNode.class);
         when(node.get("userId")).thenReturn(mock(JsonNode.class));
         when(node.get("userId").asText()).thenReturn(TEST_USER_ID);
+
+        // Mock service to throw NoSuchElementException
+        doThrow(new NoSuchElementException()).when(cartService).createShoppingCart(anyString());
+
         // Test
         ResponseEntity<Object> responseEntity = cartController.createShoppingCart(node);
+
         // Verify
-        assert responseEntity.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR;
+        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assert responseBody != null;
         assert responseBody.containsKey("status");
@@ -166,11 +177,16 @@ class CartControllerTest {
         verify(cartService, times(1)).createShoppingCart(anyString());
     }
 
+
     @AfterEach
     void tearDown() {
-        cartService.deleteCartItemFromShoppingCart
+        try{
+            cartService.deleteCartItemFromShoppingCart
                 (new DTOCartItemDeletionInformation(TEST_USER_ID, TEST_PRODUCT_ID));
-        cartService.deleteShoppingCart(TEST_USER_ID);
+            cartService.deleteShoppingCart(TEST_USER_ID);
+        }catch(java.lang.Exception e){
+
+        }
     }
 
 }

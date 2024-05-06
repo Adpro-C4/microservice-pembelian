@@ -23,18 +23,18 @@ public class CartController {
 
     @GetMapping("/data/{id}")
     public ResponseEntity<Object> getShoppingCartInformation(@PathVariable String id){
-        DTOShoppingCartInformation information = cartService.getShoppingCartInformation(id);
-        if(information == null){
-            String message = "Data shopping cart tidak ditemukan!";
-            return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, new HashMap<>());
+        try {
+            DTOShoppingCartInformation information = cartService.getShoppingCartInformation(id);
+            Map<String,Object> response = new HashMap<>();
+            String message = "berhasil mendapatkan data shopping cart";
+            response.put("message", message);
+            response.put("shoppingCart", information.dtoCartItemList());
+            response.put("totalPrice", information.totalPrice());
+            return  ResponseHandler.generateResponse(message,
+                    HttpStatus.ACCEPTED, response);
+        } catch (NoSuchElementException e) {
+            return ResponseHandler.generateResponse("Data shopping cart tidak ditemukan!", HttpStatus.NOT_FOUND, e);
         }
-        Map<String,Object> response = new HashMap<>();
-        String message = "berhasil mendapatkan data shopping cart";
-        response.put("message", message);
-        response.put("shoppingCart", information.dtoCartItemList());
-        response.put("totalPrice", information.totalPrice());
-        return  ResponseHandler.generateResponse(message,
-                HttpStatus.ACCEPTED, response);
     }
     @PostMapping("/update")
     public ResponseEntity<Object> updateCartItemOnShoppingCart(@RequestBody DTOCartItemUpdateInformation cartItemUpdateInformation){
@@ -52,19 +52,29 @@ public class CartController {
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteCartItemFromShoppingCart(@RequestBody DTOCartItemDeletionInformation information){
-        cartService.deleteCartItemFromShoppingCart(information);
-        Map<String, Object> response = new HashMap<>();
-        String message = "Sukses menghapus cart item";
-        response.put("message", message);
-        return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        try {
+            cartService.deleteCartItemFromShoppingCart(information);
+            Map<String, Object> response = new HashMap<>();
+            String message = "Sukses menghapus cart item";
+            response.put("message", message);
+            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        } catch (NoSuchElementException e) {
+            return ResponseHandler.generateResponse("Cart Item yang akan dihapus rupanya tidak ada!", HttpStatus.NOT_FOUND, new HashMap<>());
+        }
     }
     @PostMapping("/create")
     public ResponseEntity<Object> createShoppingCart(@RequestBody JsonNode node){
-        String userId = node.get("userId").asText();
-        cartService.createShoppingCart(userId);
-        Map<String, Object> response = new HashMap<>();
-        String message = "Sukses membuat shopping cart untuk user " +userId;
-        response.put("message", message);
-        return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        try{
+            String userId = node.get("userId").asText();
+            cartService.createShoppingCart(userId);
+            System.out.println("HELLO EVERYBODY");
+            Map<String, Object> response = new HashMap<>();
+            String message = "Sukses membuat shopping cart untuk user " +userId;
+            response.put("message", message);
+            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);
+        }catch (NoSuchElementException exception){
+            return ResponseHandler.generateResponse("User tidak ditemukan!",
+                    HttpStatus.INTERNAL_SERVER_ERROR, new HashMap<>());
+        }
     }
 }
