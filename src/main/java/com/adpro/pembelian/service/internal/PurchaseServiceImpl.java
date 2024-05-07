@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class PurchaseServiceImpl implements  PurchaseService {
@@ -34,21 +36,32 @@ public class PurchaseServiceImpl implements  PurchaseService {
     RestTemplate restTemplate;
     @Autowired
     OrderRepository orderRepository;
-
     @Autowired
     CartService cartService;
     
-
-    @Override
+    @Async
     public void createPurchaseRequest(DTOPurchaseInformation request) {
         validatePurchaseRequest(request);
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
-        DTOCustomerDetails customerDetails = getCustomerDetails(request.userId());
-        String resi = ShippingUtility.generateTrackingCode(request.shippingMethod());
-        OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetails, resi);
-        sendOrderStatus(orderRequest);
-        saveOrder(orderRequest);
+
+        CompletableFuture<DTOCustomerDetails> customerDetailsFuture = CompletableFuture.supplyAsync(() -> {
+            return getCustomerDetails(request.userId());
+        });
+        CompletableFuture<String> resiFuture = CompletableFuture.supplyAsync(() -> {
+            return ShippingUtility.generateTrackingCode(request.shippingMethod());
+        });
+
+        customerDetailsFuture.thenCombine(resiFuture, (customerDetails, resi) -> {
+            OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetails, resi);
+            CompletableFuture<Void> sendOrderStatusFuture = CompletableFuture.runAsync(() -> {
+                sendOrderStatus(orderRequest);
+            });
+            CompletableFuture<Void> saveOrderFuture = CompletableFuture.runAsync(() -> {
+                saveOrder(orderRequest);
+            });
+            return CompletableFuture.allOf(sendOrderStatusFuture, saveOrderFuture);
+        }).thenCompose(result -> CompletableFuture.completedFuture(null));
     }
 
     private void validatePurchaseRequest(DTOPurchaseInformation request) {
