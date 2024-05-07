@@ -62,7 +62,7 @@ public class OrderControllerTest {
 
     @Test
     void createOrderSuccess(){
-        doNothing().when(purchaseService).createPurchaseRequest(any(DTOPurchaseInformation.class));
+       
         ResponseEntity<Object> response =  orderController.createOrder(purchaseInformationValid);
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         verify(purchaseService, times(1)).createPurchaseRequest(any(DTOPurchaseInformation.class));

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,7 +67,8 @@ public class PurchaseServiceTest {
         DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Arrays.asList(TEST_PRODUCT_ID_1, TEST_PRODUCT_ID_2),
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
         when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
-        purchaseService.createPurchaseRequest(request);
+        CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
+        future.join();
         verify(orderRepository, times(1)).save(any());
     }
 

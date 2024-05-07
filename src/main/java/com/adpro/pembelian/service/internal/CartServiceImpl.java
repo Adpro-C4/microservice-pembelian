@@ -2,7 +2,6 @@ package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
-import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
 import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.builder.CartItemBuilder;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -130,18 +130,34 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void createShoppingCart(String userId) {
-        DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
-        System.out.println(customerDetails);
-        if(customerDetails == null){
-            throw  new NoSuchElementException();
-        }
-        ShoppingCartEntity cart = getShoppingCart(userId);
-        if(cart == null){
-            shoppingCartRepository.save(
-                    new ShoppingCartBuilder().withCartItems
-                            (new HashMap<>()).
-                            withUserId(Long.parseLong(userId)).build());
-        }
+    public CompletableFuture<Void> createShoppingCart(String userId) {
+        return CompletableFuture.supplyAsync(() -> customerDetailsService.getUserDetailsAPI(userId))
+            .thenApplyAsync(customerDetails -> {
+                System.out.println(customerDetails);
+                if (customerDetails == null) {
+                    throw new NoSuchElementException();
+                }
+                return getShoppingCart(userId);
+            })
+            .thenAcceptAsync(cart -> {
+                if (cart == null) {
+                    shoppingCartRepository.save(
+                            new ShoppingCartBuilder().withCartItems(new HashMap<>())
+                                    .withUserId(Long.parseLong(userId)).build());
+                }
+            })
+            .handle((result, ex) -> {
+                if (ex != null) {
+                    if (ex.getCause() instanceof NoSuchElementException) {
+                        System.err.println("User not found: " + userId);
+                        throw new  NoSuchElementException(ex); // Melemparkan kembali NoSuchElementExcepion sebagai RuntimeException
+                    } else {
+                        ex.printStackTrace();
+                    }
+                }
+                return null;
+            });
     }
+
+
 }

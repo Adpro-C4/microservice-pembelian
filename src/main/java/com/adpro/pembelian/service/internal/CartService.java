@@ -7,12 +7,13 @@ import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.ShoppingCartEntity;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface CartService {
     CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation);
     void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information);
     List<CartItemEntity> getCartItemsFromShoppingCart(String userId);
-    void createShoppingCart(String userId);
+    CompletableFuture<Void> createShoppingCart(String userId);
     ShoppingCartEntity getShoppingCart(String userId);
 
     DTOShoppingCartInformation getShoppingCartInformation(String userId);
