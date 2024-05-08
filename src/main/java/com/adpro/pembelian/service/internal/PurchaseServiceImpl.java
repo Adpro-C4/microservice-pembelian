@@ -99,20 +99,17 @@ public class PurchaseServiceImpl implements  PurchaseService {
     }
 
     private OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
-        System.out.println("TEST buildorderrequest");
-        DTOShoppingCartInformation cartInformation = cartService.getShoppingCartInformation(request.userId());
-        List<DTOCartItem> dtoCartItems = cartInformation.dtoCartItemList();
-
-        // Konversi DTOCartItem ke CartItemEntity
-        List<CartItemEntity> cartItems = new ArrayList<>();
-        for (DTOCartItem dtoCartItem : dtoCartItems) {
-            cartItems.add(CartItemEntity.fromDTO(dtoCartItem));
-        }
-
+        List<CartItemEntity> cartItems = getCartItems(request.userId(), request.cartItems());
         OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);
-        orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().calculateTotalPrice(orderRequest.getCartItems())));
+        orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().
+                calculateTotalPrice(orderRequest.getCartItems())));
+        return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
+    }
 
-        return request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
+    private List<CartItemEntity> getCartItems(String userId, List<String> cartItemIds) {
+        return cartService.getCartItemsFromShoppingCart(userId).stream()
+                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getId())))
+                .toList();
     }
 
 
