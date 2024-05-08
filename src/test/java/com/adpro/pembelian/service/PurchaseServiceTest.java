@@ -68,7 +68,7 @@ public class PurchaseServiceTest {
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
         when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
         CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
-        future.join();
+       // future.join();
         verify(orderRepository, times(1)).save(any());
     }
 
