@@ -11,6 +11,7 @@ import com.adpro.pembelian.repository.CartItemRepository;
 import com.adpro.pembelian.repository.ShoppingCartRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class CartServiceImpl implements CartService {
         shoppingCartRepository.deleteById(Long.valueOf(userId));
     }
 
-
+    @Async
     @Override
     public CompletableFuture<Void> createShoppingCart(String userId) {
         return CompletableFuture.supplyAsync(() -> customerDetailsService.getUserDetailsAPI(userId))
@@ -149,10 +150,7 @@ public class CartServiceImpl implements CartService {
             .handle((result, ex) -> {
                 if (ex != null) {
                     if (ex.getCause() instanceof NoSuchElementException) {
-                        System.err.println("User not found: " + userId);
                         throw new  NoSuchElementException(ex); // Melemparkan kembali NoSuchElementExcepion sebagai RuntimeException
-                    } else {
-                        ex.printStackTrace();
                     }
                 }
                 return null;
