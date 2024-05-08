@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<OrderTemplate, Long> {
+public interface OrderRepository extends JpaRepository<OrderTemplate, String> {
     List<OrderTemplate> findByUserId(String userId);
     List<OrderTemplate> deleteByUserId(String userId);
 }

@@ -103,21 +103,21 @@ public class PurchaseServiceTest {
     void removeOrderExists() {
       
         OrderTemplate order = new OrdinaryOrderEntity();
-        when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.of(order));
+        when(orderRepository.findById(TEST_ORDER_ID)).thenReturn(Optional.of(order));
       
         purchaseService.removePurchaseRequest(TEST_ORDER_ID);
        
-        verify(orderRepository, times(1)).deleteById(Long.parseLong(TEST_ORDER_ID));
+        verify(orderRepository, times(1)).deleteById(TEST_ORDER_ID);
     }
     @Test
     void removeOrderNotExist() {
    
-        when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.empty());
+        when(orderRepository.findById(TEST_ORDER_ID)).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () -> purchaseService.removePurchaseRequest(TEST_ORDER_ID));
 
         
-        verify(orderRepository, never()).deleteById(anyLong());
+        verify(orderRepository, never()).deleteById(anyString());
     }
     @Test
     void viewUserOrdersSuccess() {
@@ -154,7 +154,7 @@ public class PurchaseServiceTest {
     void viewOrderSuccess() {
   
         OrderTemplate order = new OrdinaryOrderEntity();
-        when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.of(order));
+        when(orderRepository.findById(TEST_ORDER_ID)).thenReturn(Optional.of(order));
 
    
         OrderTemplate result = purchaseService.viewOrder(TEST_ORDER_ID);
@@ -162,18 +162,18 @@ public class PurchaseServiceTest {
 
         assertEquals(order, result);
 
-        verify(orderRepository, times(1)).findById(Long.parseLong(TEST_ORDER_ID));
+        verify(orderRepository, times(1)).findById(TEST_ORDER_ID);
     }
 
     @Test
     void viewOrderNotFound() {
    
-        when(orderRepository.findById(Long.parseLong(TEST_ORDER_ID))).thenReturn(Optional.empty());
+        when(orderRepository.findById(TEST_ORDER_ID)).thenReturn(Optional.empty());
 
    
         assertThrows(NoSuchElementException.class, () -> purchaseService.viewOrder(TEST_ORDER_ID));
 
-        verify(orderRepository, times(1)).findById(Long.parseLong(TEST_ORDER_ID));
+        verify(orderRepository, times(1)).findById(TEST_ORDER_ID);
     }
 
 }

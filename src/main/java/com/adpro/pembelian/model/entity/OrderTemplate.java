@@ -33,11 +33,11 @@ public abstract class OrderTemplate implements Serializable {
     protected PricingStrategy<CartItemEntity> strategy;
     protected String price;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private String id;
     public abstract double getTotalPrice();
 
     protected  void setData(OrderTemplate orderTemplate){
+        setId(orderTemplate.getId());
         setShippingMethod(orderTemplate.getShippingMethod());
         setAddress(orderTemplate.getAddress());
         setResi(orderTemplate.getResi());
