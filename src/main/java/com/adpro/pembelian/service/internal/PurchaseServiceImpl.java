@@ -142,6 +142,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
         .build();
         try {
             rabbit.sendMessage("tracking-order-routing-key", new ObjectMapper().writeValueAsString(trackingOrder));
+            System.out.println("HEHEHE");
         } catch (JsonProcessingException e) {
             System.out.println(e);
         }
