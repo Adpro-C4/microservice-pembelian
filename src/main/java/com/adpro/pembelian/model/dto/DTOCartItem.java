@@ -9,4 +9,6 @@ public class DTOCartItem {
     private String name;
     private int quantity;
     private double price;
+
+
 }

@@ -30,6 +30,16 @@ public class CartItemEntity {
         return dto;
     }
 
+    public static CartItemEntity fromDTO(DTOCartItem dto) {
+        CartItemEntity entity = new CartItemEntity();
+        entity.setId(dto.getId());
+        entity.setProductId(dto.getProductId());
+        entity.setName(dto.getName());
+        entity.setQuantity(dto.getQuantity());
+        entity.setPrice(dto.getPrice());
+        return entity;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private ShoppingCartEntity shoppingCart;
