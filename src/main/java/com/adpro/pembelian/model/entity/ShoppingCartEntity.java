@@ -1,6 +1,7 @@
 package com.adpro.pembelian.model.entity;
 import com.adpro.pembelian.service.internal.CartPricingStrategy;
 import com.adpro.pembelian.service.internal.PricingStrategy;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class ShoppingCartEntity {
     private Long userId;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     @MapKey(name = "productId")
     private Map<String, CartItemEntity> cartItemMap;
 

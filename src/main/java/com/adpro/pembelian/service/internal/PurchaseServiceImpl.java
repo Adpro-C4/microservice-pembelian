@@ -83,7 +83,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
 
     private void validatePurchaseRequest(DTOPurchaseInformation request) {
-        if (request.cartItems().isEmpty() || request.cartItems() == null) {
+        if (request.cartItems() == null || request.cartItems().isEmpty()) {
             throw new IllegalArgumentException("order items tidak boleh kosong");
         }
         if (customerDetailsService.getUserDetailsAPI(request.userId()) == null) {
@@ -100,6 +100,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
     private OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
         List<CartItemEntity> cartItems = getCartItems(request.userId(), request.cartItems());
+        System.out.println("cart items: "+ cartItems.size());
         OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);
         orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().
                 calculateTotalPrice(orderRequest.getCartItems())));
@@ -107,10 +108,16 @@ public class PurchaseServiceImpl implements  PurchaseService {
     }
 
     private List<CartItemEntity> getCartItems(String userId, List<String> cartItemIds) {
-        return cartService.getCartItemsFromShoppingCart(userId).stream()
-                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getId())))
+        List<CartItemEntity> cartItemEntities = cartService.getCartItemsFromShoppingCart(userId);
+        System.out.println("Cart Items dari service:");
+        cartItemEntities.forEach(cartItem -> System.out.println(cartItem.getProductId()));
+        System.out.println("Cart Items dari cartItemIds:");
+        cartItemIds.forEach(System.out::println);
+        return cartItemEntities.stream()
+                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getProductId())))
                 .toList();
     }
+
 
 
 
@@ -126,6 +133,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
         ordinaryPurchaseRequest.setResi(resi);
         ordinaryPurchaseRequest.setCustomerDetails(customerDetails);
         ordinaryPurchaseRequest.setCartItems(cartItems);
+        cartItems.forEach(cartItemEntity -> cartItemEntity.setOrder(ordinaryPurchaseRequest));
         return ordinaryPurchaseRequest;
     }
 

@@ -3,6 +3,7 @@ package com.adpro.pembelian.model.entity;
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import com.adpro.pembelian.service.internal.PricingStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public abstract class OrderTemplate implements Serializable {
     protected DTOCustomerDetails customerDetails;
     protected String address;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonManagedReference
     protected List<CartItemEntity> cartItems;
     @Transient
     @JsonIgnore
@@ -41,6 +43,8 @@ public abstract class OrderTemplate implements Serializable {
         setShippingMethod(orderTemplate.getShippingMethod());
         setAddress(orderTemplate.getAddress());
         setResi(orderTemplate.getResi());
+        setCartItems(orderTemplate.getCartItems());
+        getCartItems().forEach(cartItemEntity -> cartItemEntity.setOrder(this));
         setCustomerDetails(orderTemplate.getCustomerDetails());
         setPrice(orderTemplate.getPrice());
         setTimestamp(orderTemplate.getTimestamp());

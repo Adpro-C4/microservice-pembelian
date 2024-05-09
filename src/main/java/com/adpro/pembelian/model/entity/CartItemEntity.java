@@ -1,5 +1,7 @@
 package com.adpro.pembelian.model.entity;
 import com.adpro.pembelian.model.dto.DTOCartItem;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,9 @@ public class CartItemEntity {
     private int quantity;
     private double price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private OrderTemplate order;
 
@@ -40,7 +44,9 @@ public class CartItemEntity {
         return entity;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private ShoppingCartEntity shoppingCart;
 
