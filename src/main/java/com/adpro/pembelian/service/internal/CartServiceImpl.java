@@ -68,6 +68,7 @@ public class CartServiceImpl implements CartService {
         if (item == null) {
             item = createCartItem(cartInformation);
             shoppingCart.getCartItemMap().put(cartInformation.productId(), item);
+            item.setShoppingCart(shoppingCart);
         }
         return item;
     }
