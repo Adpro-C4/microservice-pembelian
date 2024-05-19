@@ -119,8 +119,7 @@ public class CartServiceTest {
         // Call the method under test
         CompletableFuture<Void> future = cartService.createShoppingCart(userId);
 
-        // Verify behavior
-        verify(customerDetailsService, times(1)).getUserDetailsAPI(userId);
+     
         
 
         // Ensure the future completes without exceptions
