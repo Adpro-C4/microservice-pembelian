@@ -2,7 +2,6 @@ package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.common.ShippingUtility;
 import com.adpro.pembelian.enums.ShippingMethod;
-import com.adpro.pembelian.enums.StatusAPI;
 import com.adpro.pembelian.eventdriven.RabbitMQProducer;
 import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.OrderTemplate;
@@ -17,22 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class PurchaseServiceImpl implements  PurchaseService {
@@ -63,19 +56,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
             return ShippingUtility.generateTrackingCode(request.shippingMethod());
         });
 
-        // Menggabungkan dua CompletableFuture dan menunggu hasilnya
-        customerDetailsFuture.join(); // Menunggu hasil customerDetailsFuture
-        String resi = resiFuture.join(); // Menunggu hasil resiFuture
+        customerDetailsFuture.join();
+        String resi = resiFuture.join();
 
         System.out.println("ini resi kamu: " + resi);
         OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetailsFuture.join(), resi);
         System.out.println("order request: " + orderRequest);
         System.out.println("HINDARI DEADLOCK");
-        CompletableFuture<Void> sendOrderStatusFuture = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             sendTrackingOrder(orderRequest);
         });
 
-        CompletableFuture<Void> saveOrderFuture = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             saveOrder(orderRequest);
         });
         return  null;
@@ -98,25 +90,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
         return customerDetailsService.getUserDetailsAPI(userId);
     }
 
-    private OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
-        List<CartItemEntity> cartItems = getCartItems(request.userId(), request.cartItems());
-        System.out.println("cart items: "+ cartItems.size());
+    public OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
+        List<CartItemEntity> cartItems = cartService.getCartItemsFromShoppingCart(request.userId());
+        cartItems = cartItems.stream()
+        .filter(cartItem -> request.cartItems().contains(String.valueOf(cartItem.getProductId())))
+        .toList();
         OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);
         orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().
                 calculateTotalPrice(orderRequest.getCartItems())));
         return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
     }
 
-    private List<CartItemEntity> getCartItems(String userId, List<String> cartItemIds) {
-        List<CartItemEntity> cartItemEntities = cartService.getCartItemsFromShoppingCart(userId);
-        System.out.println("Cart Items dari service:");
-        cartItemEntities.forEach(cartItem -> System.out.println(cartItem.getProductId()));
-        System.out.println("Cart Items dari cartItemIds:");
-        cartItemIds.forEach(System.out::println);
-        return cartItemEntities.stream()
-                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getProductId())))
-                .toList();
-    }
+    
 
 
 
@@ -139,28 +124,29 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
   
 
-    private void sendTrackingOrder(OrderTemplate orderRequest){
-        DTOTrackingOrder trackingOrder = DTOTrackingOrder.builder()
+    public void sendTrackingOrder(OrderTemplate orderRequest){
+        
+        try {
+            DTOTrackingOrder trackingOrder = DTOTrackingOrder.builder()
         .orderId(orderRequest.getId())
         .methode(orderRequest.getShippingMethod())
         .resiCode("auto")
         .build();
-        try {
             rabbit.sendMessage("tracking-order-routing-key", new ObjectMapper().writeValueAsString(trackingOrder));
             System.out.println("HEHEHE");
-        } catch (JsonProcessingException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+            
         }
 
     }
 
-    private void saveOrder(OrderTemplate orderRequest) {
+    public void saveOrder(OrderTemplate orderRequest) {
         orderRepository.save(orderRequest);
     }
 
     @Override
     public void removePurchaseRequest(String orderId) {
-        OrderTemplate order = viewOrder(orderId);
+        OrderTemplate order = orderRepository.findById(orderId).orElse(null);
         if(order == null){
             throw new NoSuchElementException("Order tidak ditemukan");
         }

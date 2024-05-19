@@ -15,13 +15,14 @@ public class DTOProduct {
     private String brand;
 
     public DTOProduct(String productId, String productName, String productDescription, int productStock,
-                      double productPrice, String productThumbnail){
+                      double productPrice, String productThumbnail, String productBrand){
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productThumbnail = productThumbnail;
         setProductStock(productStock);
         setProductPrice(productPrice);
+        setBrand(productBrand);
     }
 
     public DTOProduct(){}

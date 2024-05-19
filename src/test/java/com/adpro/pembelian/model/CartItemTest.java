@@ -1,6 +1,11 @@
 package com.adpro.pembelian.model;
 import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.model.entity.OrderTemplate;
+import com.adpro.pembelian.model.entity.OrderWithVoucherEntity;
+import com.adpro.pembelian.model.entity.ShoppingCartEntity;
 import com.adpro.pembelian.model.builder.CartItemBuilder;
+import com.adpro.pembelian.model.dto.DTOCartItem;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -80,4 +85,72 @@ public class CartItemTest {
             cartItem.setQuantity(0);
         });
     }
+
+    @Test
+    public void testToDTO() {
+        CartItemEntity cartItem = new CartItemEntity(1L, "P123", "Product 1", 2, 100.0);
+        DTOCartItem dto = cartItem.toDTO();
+
+        assertEquals(cartItem.getId(), dto.getId());
+        assertEquals(cartItem.getProductId(), dto.getProductId());
+        assertEquals(cartItem.getName(), dto.getName());
+        assertEquals(cartItem.getQuantity(), dto.getQuantity());
+        assertEquals(cartItem.getPrice(), dto.getPrice(), 0.01);
+    }
+
+    @Test
+    public void testFromDTO() {
+        DTOCartItem dto = new DTOCartItem();
+        dto.setId(1L);
+        dto.setProductId("P123");
+        dto.setName("Product 1");
+        dto.setQuantity(2);
+        dto.setPrice(100.0);
+
+        CartItemEntity cartItem = CartItemEntity.fromDTO(dto);
+
+        assertEquals(dto.getId(), cartItem.getId());
+        assertEquals(dto.getProductId(), cartItem.getProductId());
+        assertEquals(dto.getName(), cartItem.getName());
+        assertEquals(dto.getQuantity(), cartItem.getQuantity());
+        assertEquals(dto.getPrice(), cartItem.getPrice(), 0.01);
+    }
+
+    @Test
+    public void testParameterizedConstructor() {
+        Long id = 1L;
+        String productId = "P123";
+        String name = "Product 1";
+        int quantity = 2;
+        double price = 100.0;
+
+        CartItemEntity cartItem = new CartItemEntity(id, productId, name, quantity, price);
+
+        assertEquals(id, cartItem.getId());
+        assertEquals(productId, cartItem.getProductId());
+        assertEquals(name, cartItem.getName());
+        assertEquals(quantity, cartItem.getQuantity());
+        assertEquals(price, cartItem.getPrice(), 0.01);
+    }
+
+        @Test
+    public void testOrderAssociation() {
+        OrderTemplate order = new OrderWithVoucherEntity();
+        CartItemEntity cartItem = new CartItemEntity();
+        cartItem.setOrder(order);
+
+        assertEquals(order, cartItem.getOrder());
+    }
+
+    @Test
+    public void testShoppingCartAssociation() {
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
+        CartItemEntity cartItem = new CartItemEntity();
+        cartItem.setShoppingCart(shoppingCart);
+
+        assertEquals(shoppingCart, cartItem.getShoppingCart());
+    }
+
+
+
 }

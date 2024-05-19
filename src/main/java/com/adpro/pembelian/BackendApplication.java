@@ -16,7 +16,7 @@ public class BackendApplication {
 	}
 	@Bean
 	public Executor taskExecutor() {
-		return Executors.newVirtualThreadPerTaskExecutor();
+		return Executors.newFixedThreadPool(8);
 	}
 
 }

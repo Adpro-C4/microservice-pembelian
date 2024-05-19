@@ -38,13 +38,15 @@ public abstract class OrderTemplate implements Serializable {
     private String id;
     public abstract double getTotalPrice();
 
-    protected  void setData(OrderTemplate orderTemplate){
+    public  void setData(OrderTemplate orderTemplate){
         setId(orderTemplate.getId());
         setShippingMethod(orderTemplate.getShippingMethod());
         setAddress(orderTemplate.getAddress());
         setResi(orderTemplate.getResi());
         setCartItems(orderTemplate.getCartItems());
-        getCartItems().forEach(cartItemEntity -> cartItemEntity.setOrder(this));
+        if(getCartItems() != null){
+            getCartItems().forEach(cartItemEntity -> cartItemEntity.setOrder(this));
+        }
         setCustomerDetails(orderTemplate.getCustomerDetails());
         setPrice(orderTemplate.getPrice());
         setTimestamp(orderTemplate.getTimestamp());

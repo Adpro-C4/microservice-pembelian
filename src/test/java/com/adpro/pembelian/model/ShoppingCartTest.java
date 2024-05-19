@@ -2,10 +2,42 @@ package com.adpro.pembelian.model;
 
 import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.ShoppingCartEntity;
+import com.adpro.pembelian.service.internal.CartPricingStrategy;
+import com.adpro.pembelian.service.internal.PricingStrategy;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
+
 public class ShoppingCartTest {
+    private ShoppingCartEntity shoppingCart;
+
+    @BeforeEach
+    public void setUp() {
+        shoppingCart = new ShoppingCartEntity();
+        shoppingCart.setUserId(123L);
+    }
+
+    @Test
+    public void testSetPricingStrategy() {
+        PricingStrategy<CartItemEntity> newStrategy = items -> items.stream().mapToDouble(CartItemEntity::calculateTotalPrice).sum();
+        shoppingCart.setPricingStrategy(newStrategy);
+
+        assertEquals(newStrategy, shoppingCart.getPricingStrategy());
+        assertNotNull(shoppingCart.getPricingStrategy());
+    }
+
+    @Test
+    public void testGetUserId() {
+        assertEquals(123L, shoppingCart.getUserId());
+    }
+
+    @Test
+    public void testGetPricingStrategy() {
+        PricingStrategy<CartItemEntity> defaultStrategy = new CartPricingStrategy();
+        assertEquals(defaultStrategy.getClass(), shoppingCart.getPricingStrategy().getClass());
+    }
 
     @Test
     void testCreateShoppingCart() {
@@ -71,5 +103,7 @@ public class ShoppingCartTest {
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         assertThrows(NullPointerException.class, () -> shoppingCart.addItem(null));
     }
+
+    
 }
 
