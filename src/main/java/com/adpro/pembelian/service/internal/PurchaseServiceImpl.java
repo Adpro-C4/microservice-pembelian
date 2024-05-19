@@ -2,7 +2,6 @@ package com.adpro.pembelian.service.internal;
 
 import com.adpro.pembelian.common.ShippingUtility;
 import com.adpro.pembelian.enums.ShippingMethod;
-import com.adpro.pembelian.enums.StatusAPI;
 import com.adpro.pembelian.eventdriven.RabbitMQProducer;
 import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.model.entity.OrderTemplate;
@@ -17,22 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class PurchaseServiceImpl implements  PurchaseService {
@@ -63,19 +55,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
             return ShippingUtility.generateTrackingCode(request.shippingMethod());
         });
 
-        // Menggabungkan dua CompletableFuture dan menunggu hasilnya
-        customerDetailsFuture.join(); // Menunggu hasil customerDetailsFuture
-        String resi = resiFuture.join(); // Menunggu hasil resiFuture
+        customerDetailsFuture.join();
+        String resi = resiFuture.join();
 
         System.out.println("ini resi kamu: " + resi);
         OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetailsFuture.join(), resi);
         System.out.println("order request: " + orderRequest);
         System.out.println("HINDARI DEADLOCK");
-        CompletableFuture<Void> sendOrderStatusFuture = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             sendTrackingOrder(orderRequest);
         });
 
-        CompletableFuture<Void> saveOrderFuture = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             saveOrder(orderRequest);
         });
         return  null;
