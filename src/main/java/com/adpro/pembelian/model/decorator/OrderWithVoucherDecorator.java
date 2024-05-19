@@ -5,9 +5,8 @@ import com.adpro.pembelian.model.entity.OrderTemplate;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import jakarta.persistence.Embedded;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+
 @Getter
 public class OrderWithVoucherDecorator extends OrderDecorator {
     @Embedded
@@ -20,6 +19,17 @@ public class OrderWithVoucherDecorator extends OrderDecorator {
 
     public OrderWithVoucherDecorator() {
 
+    }
+
+    @Override
+    public String getShippingMethod(){
+        return this.request.getShippingMethod();
+    }
+
+    @Override
+    public String getResi() {
+        // TODO Auto-generated method stub
+        return this.request.getResi();
     }
 
     @Override

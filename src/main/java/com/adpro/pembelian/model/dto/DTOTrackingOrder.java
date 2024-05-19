@@ -12,4 +12,14 @@ public class DTOTrackingOrder {
     private String orderId;
     private String methode;
     private String resiCode;
+
+    @Override
+    public String toString() {
+        return "DTOTrackingOrder{" +
+                "trackingId=" + trackingId +
+                ", orderId='" + orderId + '\'' +
+                ", methode='" + methode + '\'' +
+                ", resiCode='" + resiCode + '\'' +
+                '}';
+    }
 }

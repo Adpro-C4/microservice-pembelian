@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,16 +33,13 @@ public class CustomerDetailsServiceTest {
     @InjectMocks
     private APICustomerDetailsServiceImpl customerDetailsService;
 
-    @SuppressWarnings("deprecation")
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPI() {
-
         String userId = "123";
         String name = "John Doe";
         String email = "john@example.com";
@@ -50,11 +49,10 @@ public class CustomerDetailsServiceTest {
         JsonNode userDataNode = createSampleJsonNode(name, email, phoneNumber, username);
         JsonNode responseDataNode = createSampleResponseJsonNode(userDataNode);
 
-        when(restTemplate.getForEntity(any(String.class), any(Class.class)))
+        when(restTemplate.getForEntity(anyString(), any(Class.class)))
                 .thenReturn(new ResponseEntity<>(responseDataNode, HttpStatus.OK));
 
         DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
-
 
         assertEquals(name, customerDetails.getFullname());
         assertEquals(email, customerDetails.getEmail());
@@ -63,19 +61,28 @@ public class CustomerDetailsServiceTest {
         assertEquals(userId, customerDetails.getUserId());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPIUserNotFound() {
         String userId = "123";
-        when(restTemplate.getForEntity(any(String.class), any(Class.class)))
+        when(restTemplate.getForEntity(anyString(), any(Class.class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
-        assertThrows(
-                AssertionError.class,
-                () -> customerDetailsService.getUserDetailsAPI(userId)
-        );
+        DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
 
-        verify(restTemplate, times(1)).getForEntity(any(String.class), any(Class.class));
+        assertNull(customerDetails);
+        verify(restTemplate, times(1)).getForEntity(anyString(), any(Class.class));
+    }
+
+    @Test
+    void testGetUserDetailsAPIException() {
+        String userId = "123";
+        when(restTemplate.getForEntity(anyString(), any(Class.class)))
+                .thenThrow(new RuntimeException("API error"));
+
+        DTOCustomerDetails customerDetails = customerDetailsService.getUserDetailsAPI(userId);
+
+        assertNull(customerDetails);
+        verify(restTemplate, times(1)).getForEntity(anyString(), any(Class.class));
     }
 
     private JsonNode createSampleJsonNode(String name, String email, String phoneNumber, String username) {

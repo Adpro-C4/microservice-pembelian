@@ -38,12 +38,6 @@ public class CartServiceImpl implements CartService {
         ShoppingCartEntity shoppingCart = findOrCreateShoppingCart(cartInformation.userId());
         CartItemEntity item = findOrCreateCartItem(shoppingCart, cartInformation);
         updateCartItem(item, cartInformation);
-
-        if (item.getQuantity() == 0) {
-            deleteCartItemFromShoppingCart(new DTOCartItemDeletionInformation(cartInformation.userId(), 
-            cartInformation.productId()));
-        }
-
         shoppingCartRepository.save(shoppingCart);
         return item;
     }
@@ -63,7 +57,7 @@ public class CartServiceImpl implements CartService {
         return shoppingCart;
     }
 
-    private CartItemEntity findOrCreateCartItem(ShoppingCartEntity shoppingCart, DTOCartItemUpdateInformation cartInformation) {
+    public CartItemEntity findOrCreateCartItem(ShoppingCartEntity shoppingCart, DTOCartItemUpdateInformation cartInformation) {
         CartItemEntity item = shoppingCart.getCartItemMap().get(cartInformation.productId());
         if (item == null) {
             item = createCartItem(cartInformation);
@@ -127,6 +121,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void deleteShoppingCart(String userId) {
+        if(getShoppingCart(userId) == null){
+            throw new NoSuchElementException();
+        }
         shoppingCartRepository.deleteById(Long.valueOf(userId));
     }
 
@@ -147,14 +144,6 @@ public class CartServiceImpl implements CartService {
                             new ShoppingCartBuilder().withCartItems(new HashMap<>())
                                     .withUserId(Long.parseLong(userId)).build());
                 }
-            })
-            .handle((result, ex) -> {
-                if (ex != null) {
-                    if (ex.getCause() instanceof NoSuchElementException) {
-                        throw new  NoSuchElementException(ex); // Melemparkan kembali NoSuchElementExcepion sebagai RuntimeException
-                    }
-                }
-                return null;
             });
     }
 

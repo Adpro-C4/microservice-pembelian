@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -89,25 +90,18 @@ public class PurchaseServiceImpl implements  PurchaseService {
         return customerDetailsService.getUserDetailsAPI(userId);
     }
 
-    private OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
-        List<CartItemEntity> cartItems = getCartItems(request.userId(), request.cartItems());
-        System.out.println("cart items: "+ cartItems.size());
+    public OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
+        List<CartItemEntity> cartItems = cartService.getCartItemsFromShoppingCart(request.userId());
+        cartItems = cartItems.stream()
+        .filter(cartItem -> request.cartItems().contains(String.valueOf(cartItem.getProductId())))
+        .toList();
         OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);
         orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().
                 calculateTotalPrice(orderRequest.getCartItems())));
         return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
     }
 
-    private List<CartItemEntity> getCartItems(String userId, List<String> cartItemIds) {
-        List<CartItemEntity> cartItemEntities = cartService.getCartItemsFromShoppingCart(userId);
-        System.out.println("Cart Items dari service:");
-        cartItemEntities.forEach(cartItem -> System.out.println(cartItem.getProductId()));
-        System.out.println("Cart Items dari cartItemIds:");
-        cartItemIds.forEach(System.out::println);
-        return cartItemEntities.stream()
-                .filter(cartItem -> cartItemIds.contains(String.valueOf(cartItem.getProductId())))
-                .toList();
-    }
+    
 
 
 
@@ -130,28 +124,29 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
   
 
-    private void sendTrackingOrder(OrderTemplate orderRequest){
-        DTOTrackingOrder trackingOrder = DTOTrackingOrder.builder()
+    public void sendTrackingOrder(OrderTemplate orderRequest){
+        
+        try {
+            DTOTrackingOrder trackingOrder = DTOTrackingOrder.builder()
         .orderId(orderRequest.getId())
         .methode(orderRequest.getShippingMethod())
         .resiCode("auto")
         .build();
-        try {
             rabbit.sendMessage("tracking-order-routing-key", new ObjectMapper().writeValueAsString(trackingOrder));
             System.out.println("HEHEHE");
-        } catch (JsonProcessingException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+            
         }
 
     }
 
-    private void saveOrder(OrderTemplate orderRequest) {
+    public void saveOrder(OrderTemplate orderRequest) {
         orderRepository.save(orderRequest);
     }
 
     @Override
     public void removePurchaseRequest(String orderId) {
-        OrderTemplate order = viewOrder(orderId);
+        OrderTemplate order = orderRepository.findById(orderId).orElse(null);
         if(order == null){
             throw new NoSuchElementException("Order tidak ditemukan");
         }

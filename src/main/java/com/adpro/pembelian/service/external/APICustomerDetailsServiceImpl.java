@@ -18,7 +18,7 @@ public class APICustomerDetailsServiceImpl implements APICustomerDetailsService 
         try {
             JsonNode node = restTemplate.getForEntity(url, JsonNode.class).getBody();
             System.out.println(node);
-            assert node != null;
+           // assert node != null;
             return getUserDetails(node.get("data").get("user_detail"));
 
         }catch (Exception e){

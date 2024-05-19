@@ -8,7 +8,7 @@ import java.util.List;
 public class VoucherCartPricingStrategy implements PricingStrategy<CartItemEntity>{
     private DTOVoucher voucher;
     public VoucherCartPricingStrategy(DTOVoucher voucher){
-        this.voucher = voucher;
+        setVoucher(voucher);
     }
     public VoucherCartPricingStrategy(){}
 

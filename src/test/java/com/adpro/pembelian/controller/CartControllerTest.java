@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +41,27 @@ class CartControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+
+    @Test
+    void updateCartItemOnShoppingCart_Exception() {
+        DTOCartItemUpdateInformation cartItemUpdateInformation = new DTOCartItemUpdateInformation(TEST_USER_ID, "ItemName", TEST_PRODUCT_ID, "10.0", "2");
+
+        // Mock service to throw NoSuchElementException
+        doThrow(new NoSuchElementException()).when(cartService).createOrUpdateCartItemToShoppingCart(any(DTOCartItemUpdateInformation.class));
+
+        // Test
+        ResponseEntity<Object> responseEntity = cartController.updateCartItemOnShoppingCart(cartItemUpdateInformation);
+
+        // Verify
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
+        assertNotNull(responseBody);
+        assertTrue(responseBody.containsKey("status"));
+        assertEquals(HttpStatus.NOT_FOUND.value(), responseBody.get("status"));
+        verify(cartService, times(1)).createOrUpdateCartItemToShoppingCart(any(DTOCartItemUpdateInformation.class));
+    }       
 
     @Test
     void getShoppingCartInformationExist() {
