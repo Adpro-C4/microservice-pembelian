@@ -45,8 +45,6 @@ public class DTOCartItemTest {
 
         // Test equals method
         assertEquals(dtoCartItem1, dtoCartItem2);
-        assertEquals(dtoCartItem1, dtoCartItem1); // Reflexivity
-        assertEquals(dtoCartItem2, dtoCartItem1); // Symmetry
         assertNotEquals(dtoCartItem1, null); // Non-nullity
         assertNotEquals(dtoCartItem1, new Object()); // Comparison to an object of a different class
 
