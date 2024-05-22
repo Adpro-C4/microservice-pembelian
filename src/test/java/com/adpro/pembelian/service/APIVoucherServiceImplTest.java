@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.client.RestTemplate;
 
+import com.adpro.pembelian.enums.ProductAPI;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import com.adpro.pembelian.service.external.APIVoucherServiceImpl;
 
@@ -18,6 +20,9 @@ public class APIVoucherServiceImplTest {
 
     @Mock
     private DTOVoucher mockVoucher;
+
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     private APIVoucherServiceImpl voucherService;
@@ -32,7 +37,10 @@ public class APIVoucherServiceImplTest {
 
     @Test
     void testGetVoucherPositive() {
-        // Mock behavior
+        // Configure mock RestTemplate
+        when(restTemplate.getForObject(ProductAPI.VOUCHER_BY_ID.getUrl() + "?id=" + TEST_VOUCHER_ID, DTOVoucher.class))
+            .thenReturn(mockVoucher);
+
         when(mockVoucher.getVoucherId()).thenReturn(Long.parseLong(TEST_VOUCHER_ID));
         when(mockVoucher.getVoucherName()).thenReturn("TEST VOUCHER");
         when(mockVoucher.getVoucherDescription()).thenReturn("DESKRIPSI");
@@ -52,14 +60,10 @@ public class APIVoucherServiceImplTest {
 
     @Test
     void testGetVoucherNegative() {
-        // Mock APIVoucherServiceImpl
-        APIVoucherServiceImpl mockVoucherService = mock(APIVoucherServiceImpl.class);
-
-        // Stub method behavior
-        when(mockVoucherService.getVoucher(anyString())).thenReturn(null); // Stub method to return null
-
-        // Test method and assert that NoSuchElementException is thrown
-        assertNull(mockVoucherService.getVoucher(TEST_VOUCHER_ID));
+        when(restTemplate.getForObject(ProductAPI.VOUCHER_BY_ID.getUrl() + "?id=" + TEST_VOUCHER_ID, DTOVoucher.class))
+            .thenReturn(null);
+        DTOVoucher result = voucherService.getVoucher(TEST_VOUCHER_ID);
+        assertNull(result);
     }
 }
 

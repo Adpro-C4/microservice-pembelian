@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adpro.pembelian.model.DTOCartItemTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.028">
-  <properties/>
-  <testcase name="testDTOCartItem()" classname="com.adpro.pembelian.model.DTOCartItemTest" time="0.028"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

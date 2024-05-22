@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adpro.pembelian.model.DTOProductTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.012">
-  <properties/>
-  <testcase name="testParameterizedConstructorAndGetters()" classname="com.adpro.pembelian.model.DTOProductTest" time="0.002"/>
-  <testcase name="testSetProductPrice()" classname="com.adpro.pembelian.model.DTOProductTest" time="0.003"/>
-  <testcase name="testSetProductStock()" classname="com.adpro.pembelian.model.DTOProductTest" time="0.003"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

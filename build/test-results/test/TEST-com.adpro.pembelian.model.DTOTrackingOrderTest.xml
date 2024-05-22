@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.adpro.pembelian.model.DTOTrackingOrderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.014">
-  <properties/>
-  <testcase name="testDTOTrackingOrderBuilder()" classname="com.adpro.pembelian.model.DTOTrackingOrderTest" time="0.011"/>
-  <testcase name="testDTOTrackingOrderToString()" classname="com.adpro.pembelian.model.DTOTrackingOrderTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
