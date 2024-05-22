@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Run Build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out the Git repository
+        uses: actions/checkout@v4
+      - name: Set up Java toolchain
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "gradle"
+      - name: Set execute permission on gradlew
+        run: |
+          chmod +x gradlew
+      - name: Run build
+        run: ./gradlew clean build
