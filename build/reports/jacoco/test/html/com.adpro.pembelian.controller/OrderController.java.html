@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.controller</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.controller;
+
+import com.adpro.pembelian.common.ResponseHandler;
+import com.adpro.pembelian.model.dto.DTOPurchaseInformation;
+import com.adpro.pembelian.service.internal.PurchaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+@RestController
+@RequestMapping(&quot;/order&quot;)
+<span class="fc" id="L17">public class OrderController {</span>
+    @Autowired
+    PurchaseService purchaseService;
+    @PostMapping(&quot;/create&quot;)
+    ResponseEntity&lt;Object&gt; createOrder(@RequestBody DTOPurchaseInformation purchaseInformation){
+        try{
+<span class="fc" id="L23">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L24">            String message = &quot;Berhasil menambahkan order&quot;;</span>
+<span class="fc" id="L25">            purchaseService.createPurchaseRequest(purchaseInformation);</span>
+<span class="fc" id="L26">            data.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L27">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED, data);</span>
+<span class="fc" id="L28">        }catch(IllegalArgumentException err){</span>
+<span class="fc" id="L29">            return ResponseHandler.generateResponse(err.getMessage(), </span>
+            HttpStatus.NOT_ACCEPTABLE, err);
+<span class="fc" id="L31">        }catch(NoSuchElementException err){</span>
+<span class="fc" id="L32">            return ResponseHandler.generateResponse(err.getMessage(), </span>
+            HttpStatus.NOT_FOUND, err);
+        }
+    }
+
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    ResponseEntity&lt;Object&gt; removeOrder(@PathVariable String id){
+        try {
+<span class="fc" id="L40">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L41">            String message = &quot;Berhasil menghapus order&quot;;</span>
+<span class="fc" id="L42">            purchaseService.removePurchaseRequest(id);</span>
+<span class="fc" id="L43">            data.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L44">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED, data);</span>
+<span class="fc" id="L45">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L46">            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, e);</span>
+        }
+    }
+
+    @GetMapping(&quot;/view/user/{id}&quot;)
+    ResponseEntity&lt;Object&gt;  viewUserOrders(@PathVariable String id ){
+        try {
+<span class="fc" id="L53">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L54">            String message = &quot;Berhasil menampilkan semua order dari user dengan id&quot; + id;</span>
+<span class="fc" id="L55">            data.put(&quot;orders&quot;, purchaseService.viewAllOrderByUserId(id));</span>
+<span class="fc" id="L56">            data.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L57">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED, data);</span>
+<span class="fc" id="L58">        } catch (Exception e) {</span>
+<span class="fc" id="L59">            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, e);</span>
+        }
+    }
+
+    @GetMapping(&quot;view/order-data/{id}&quot;)
+    ResponseEntity&lt;Object&gt;  viewOrder(@PathVariable String id ){
+        try {
+<span class="fc" id="L66">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L67">            String message = &quot;Menampilkan order dengan id&quot; + id;</span>
+<span class="fc" id="L68">            data.put(&quot;order&quot;, purchaseService.viewOrder(id));</span>
+<span class="fc" id="L69">            data.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L70">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED, data);</span>
+<span class="fc" id="L71">        } catch (Exception e) {</span>
+<span class="fc" id="L72">            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, e);</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

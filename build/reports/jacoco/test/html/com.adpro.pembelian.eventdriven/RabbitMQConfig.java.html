@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RabbitMQConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.eventdriven</a> &gt; <span class="el_source">RabbitMQConfig.java</span></div><h1>RabbitMQConfig.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.eventdriven;
+
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+<span class="fc" id="L13">public class RabbitMQConfig {</span>
+
+    @Bean
+    public Queue purchaseQueue() {
+<span class="fc" id="L17">        return new Queue(&quot;purchase-queue&quot;, false);</span>
+    }
+
+    @Bean
+    public Queue orderQueue() {
+<span class="fc" id="L22">        return new Queue(&quot;order-status-queue&quot;, false);</span>
+    }
+
+    @Bean
+    public Queue trackingOrderQueue(){
+<span class="fc" id="L27">        return new Queue(&quot;tracking-order-queue&quot;, false);</span>
+    }
+    @Bean
+    public Queue stokProdukQueue(){
+<span class="fc" id="L31">        return new Queue(&quot;stock-product-queue&quot;, false);</span>
+    }
+
+    @Bean
+    public Exchange exchange() {
+<span class="fc" id="L36">        return new DirectExchange(&quot;helloworld&quot;);</span>
+    }
+
+    @Bean
+    public Binding purchaseBinding(Queue purchaseQueue, Exchange exchange) {
+<span class="fc" id="L41">        return BindingBuilder.bind(purchaseQueue)</span>
+<span class="fc" id="L42">            .to(exchange)</span>
+<span class="fc" id="L43">            .with(&quot;purchase-routing-key&quot;)</span>
+<span class="fc" id="L44">            .noargs();</span>
+    }
+
+    @Bean
+    public Binding orderBinding(Queue orderQueue, Exchange exchange) {
+<span class="fc" id="L49">        return BindingBuilder.bind(orderQueue)</span>
+<span class="fc" id="L50">            .to(exchange)</span>
+<span class="fc" id="L51">            .with(&quot;order-status-routing-key&quot;)</span>
+<span class="fc" id="L52">            .noargs();</span>
+    }
+
+    @Bean
+    public Binding trackingOrderBinding(Queue trackingOrderQueue, Exchange exchange) {
+<span class="fc" id="L57">        return BindingBuilder.bind(trackingOrderQueue)</span>
+<span class="fc" id="L58">            .to(exchange)</span>
+<span class="fc" id="L59">            .with(&quot;tracking-order-routing-key&quot;)</span>
+<span class="fc" id="L60">            .noargs();</span>
+    }
+    @Bean
+    public Binding updateStokProdukBinding(Queue stokProdukQueue, Exchange exchange){
+<span class="fc" id="L64">        return BindingBuilder.bind(stokProdukQueue)</span>
+<span class="fc" id="L65">            .to(exchange)</span>
+<span class="fc" id="L66">            .with(&quot;update-stok-produk-routing-key&quot;)</span>
+<span class="fc" id="L67">            .noargs();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

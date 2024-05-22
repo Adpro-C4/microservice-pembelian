@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchaseServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.service.internal</a> &gt; <span class="el_source">PurchaseServiceImpl.java</span></div><h1>PurchaseServiceImpl.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.service.internal;
+
+import com.adpro.pembelian.common.ShippingUtility;
+import com.adpro.pembelian.enums.ShippingMethod;
+import com.adpro.pembelian.eventdriven.RabbitMQProducer;
+import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.model.entity.OrderTemplate;
+import com.adpro.pembelian.model.entity.OrderWithVoucherEntity;
+import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
+import com.adpro.pembelian.model.dto.*;
+import com.adpro.pembelian.repository.OrderRepository;
+import com.adpro.pembelian.service.external.APICustomerDetailsService;
+import com.adpro.pembelian.service.external.APIVoucherService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+<span class="fc" id="L31">public class PurchaseServiceImpl implements  PurchaseService {</span>
+    @Autowired
+    APICustomerDetailsService customerDetailsService;
+    @Autowired
+    APIVoucherService voucherService;
+    @Autowired
+    RestTemplate restTemplate;
+    @Autowired
+    OrderRepository orderRepository;
+    @Autowired
+    CartService cartService;
+    @Autowired
+    RabbitMQProducer rabbit;
+    
+    @Async
+    @Transactional
+    public CompletableFuture&lt;Void&gt; createPurchaseRequest(DTOPurchaseInformation request) {
+<span class="fc" id="L48">        validatePurchaseRequest(request);</span>
+<span class="fc" id="L49">        Instant timestamp = Instant.now();</span>
+<span class="fc" id="L50">        String iso8601Timestamp = timestamp.toString();</span>
+
+<span class="fc" id="L52">        CompletableFuture&lt;DTOCustomerDetails&gt; customerDetailsFuture = CompletableFuture.supplyAsync(() -&gt; {</span>
+<span class="fc" id="L53">            return getCustomerDetails(request.userId());</span>
+        });
+<span class="fc" id="L55">        CompletableFuture&lt;String&gt; resiFuture = CompletableFuture.supplyAsync(() -&gt; {</span>
+<span class="fc" id="L56">            return ShippingUtility.generateTrackingCode(request.shippingMethod());</span>
+        });
+
+<span class="fc" id="L59">        customerDetailsFuture.join();</span>
+<span class="fc" id="L60">        String resi = resiFuture.join();</span>
+
+<span class="fc" id="L62">        System.out.println(&quot;ini resi kamu: &quot; + resi);</span>
+<span class="fc" id="L63">        OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetailsFuture.join(), resi);</span>
+<span class="fc" id="L64">        System.out.println(&quot;order request: &quot; + orderRequest);</span>
+<span class="fc" id="L65">        System.out.println(&quot;HINDARI DEADLOCK&quot;);</span>
+<span class="fc" id="L66">        CompletableFuture.runAsync(() -&gt; {</span>
+<span class="fc" id="L67">            sendTrackingOrder(orderRequest);</span>
+<span class="fc" id="L68">        });</span>
+
+<span class="fc" id="L70">        CompletableFuture.runAsync(() -&gt; {</span>
+<span class="fc" id="L71">            saveOrder(orderRequest);</span>
+<span class="fc" id="L72">        });</span>
+<span class="fc" id="L73">        return  null;</span>
+    }
+
+
+    private void validatePurchaseRequest(DTOPurchaseInformation request) {
+<span class="fc bfc" id="L78" title="All 4 branches covered.">        if (request.cartItems() == null || request.cartItems().isEmpty()) {</span>
+<span class="fc" id="L79">            throw new IllegalArgumentException(&quot;order items tidak boleh kosong&quot;);</span>
+        }
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (customerDetailsService.getUserDetailsAPI(request.userId()) == null) {</span>
+<span class="fc" id="L82">            throw new NoSuchElementException(&quot;User yang melakukan order tidak ditemukan&quot;);</span>
+        }
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (!ShippingMethod.contains(request.shippingMethod())) {</span>
+<span class="fc" id="L85">            throw new IllegalArgumentException(&quot;Metode pengiriman tidak didukung&quot;);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    private DTOCustomerDetails getCustomerDetails(String userId) {
+<span class="fc" id="L90">        return customerDetailsService.getUserDetailsAPI(userId);</span>
+    }
+
+    public OrderTemplate buildOrderRequest(DTOPurchaseInformation request, String iso8601Timestamp, DTOCustomerDetails customerDetails, String resi) {
+<span class="fc" id="L94">        List&lt;CartItemEntity&gt; cartItems = cartService.getCartItemsFromShoppingCart(request.userId());</span>
+<span class="fc" id="L95">        cartItems = cartItems.stream()</span>
+<span class="fc" id="L96">        .filter(cartItem -&gt; request.cartItems().contains(String.valueOf(cartItem.getProductId())))</span>
+<span class="fc" id="L97">        .toList();</span>
+<span class="fc" id="L98">        OrderTemplate orderRequest = createOrderEntity(request, iso8601Timestamp, customerDetails, resi, cartItems);</span>
+<span class="fc" id="L99">        orderRequest.setPrice(String.valueOf(orderRequest.getStrategy().</span>
+<span class="fc" id="L100">                calculateTotalPrice(orderRequest.getCartItems())));</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;</span>
+    }
+
+    
+
+
+
+
+    private OrderTemplate createOrderEntity(DTOPurchaseInformation request, String iso8601Timestamp,
+                                            DTOCustomerDetails customerDetails, String resi,
+                                            List&lt;CartItemEntity&gt; cartItems) {
+<span class="fc" id="L112">        OrdinaryOrderEntity ordinaryPurchaseRequest = new OrdinaryOrderEntity();</span>
+<span class="fc" id="L113">        ordinaryPurchaseRequest.setId(UUID.randomUUID().toString());</span>
+<span class="fc" id="L114">        ordinaryPurchaseRequest.setUserId(request.userId());</span>
+<span class="fc" id="L115">        ordinaryPurchaseRequest.setAddress(request.address());</span>
+<span class="fc" id="L116">        ordinaryPurchaseRequest.setTimestamp(iso8601Timestamp);</span>
+<span class="fc" id="L117">        ordinaryPurchaseRequest.setShippingMethod(request.shippingMethod());</span>
+<span class="fc" id="L118">        ordinaryPurchaseRequest.setResi(resi);</span>
+<span class="fc" id="L119">        ordinaryPurchaseRequest.setCustomerDetails(customerDetails);</span>
+<span class="fc" id="L120">        ordinaryPurchaseRequest.setCartItems(cartItems);</span>
+<span class="fc" id="L121">        cartItems.forEach(cartItemEntity -&gt; cartItemEntity.setOrder(ordinaryPurchaseRequest));</span>
+<span class="fc" id="L122">        return ordinaryPurchaseRequest;</span>
+    }
+
+  
+
+    public void sendTrackingOrder(OrderTemplate orderRequest){
+        
+        try {
+<span class="fc" id="L130">            DTOTrackingOrder trackingOrder = DTOTrackingOrder.builder()</span>
+<span class="fc" id="L131">        .orderId(orderRequest.getId())</span>
+<span class="fc" id="L132">        .methode(orderRequest.getShippingMethod())</span>
+<span class="fc" id="L133">        .resiCode(&quot;auto&quot;)</span>
+<span class="fc" id="L134">        .build();</span>
+<span class="fc" id="L135">            rabbit.sendMessage(&quot;tracking-order-routing-key&quot;, new ObjectMapper().writeValueAsString(trackingOrder));</span>
+<span class="fc" id="L136">            System.out.println(&quot;HEHEHE&quot;);</span>
+<span class="fc" id="L137">        } catch (Exception e) {</span>
+            
+<span class="fc" id="L139">        }</span>
+
+<span class="fc" id="L141">    }</span>
+
+    public void saveOrder(OrderTemplate orderRequest) {
+<span class="fc" id="L144">        orderRepository.save(orderRequest);</span>
+<span class="fc" id="L145">    }</span>
+
+    @Override
+    public void removePurchaseRequest(String orderId) {
+<span class="fc" id="L149">        OrderTemplate order = orderRepository.findById(orderId).orElse(null);</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if(order == null){</span>
+<span class="fc" id="L151">            throw new NoSuchElementException(&quot;Order tidak ditemukan&quot;);</span>
+        }
+<span class="fc" id="L153">        orderRepository.deleteById(orderId);</span>
+<span class="fc" id="L154">    }</span>
+
+    @Override
+    public OrderTemplate viewOrder(String orderId) {
+<span class="fc" id="L158">        OrderTemplate order = orderRepository.findById(orderId).orElse(null);</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if(order == null){</span>
+<span class="fc" id="L160">            throw new NoSuchElementException(&quot;order tidak ditemukan&quot;);</span>
+        }
+<span class="fc" id="L162">        return order;</span>
+    }
+
+    @Override
+    public List&lt;OrderTemplate&gt; viewAllOrderByUserId(String userId) {
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if(customerDetailsService.getUserDetailsAPI(userId) == null){</span>
+<span class="fc" id="L168">            throw new NoSuchElementException(&quot;user sudah dihapus atau tidak ditemukan&quot;);</span>
+        }
+<span class="fc" id="L170">        return orderRepository.findByUserId(userId);</span>
+    }
+
+    @Override
+    public void removePurchaseRequestByUserId(String userId) {
+<span class="fc" id="L175">        orderRepository.deleteByUserId(userId);</span>
+<span class="fc" id="L176">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

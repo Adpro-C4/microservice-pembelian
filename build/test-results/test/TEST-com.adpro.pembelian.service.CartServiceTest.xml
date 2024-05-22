@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.service.CartServiceTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.555">
+  <properties/>
+  <testcase name="testCreateShoppingCartUserNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.461"/>
+  <testcase name="testCreateShoppingCart_CartDoesNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.008"/>
+  <testcase name="testDeleteCartItemNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.004"/>
+  <testcase name="testCreateShoppingCart_CartIsNull()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.005"/>
+  <testcase name="testCreateOrUpdateCartItemZeroOrNegative()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.005"/>
+  <testcase name="testGetCartItemsFromShoppingCart_ShoppingCartExistsWithItems()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testDeleteShoppingCartExists()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testGetCartItemsFromShoppingCart_ShoppingCartNotFound()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testDeleteCartItemExists()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testFindOrCreateCartItemDoesNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testGetCartItemsFromShoppingCart_Success()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testDeleteCartItemFromShoppingCart_Success()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.001"/>
+  <testcase name="testFindOrCreateCartItem_ItemDoesNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testGetShoppingCartInformationExists()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.007"/>
+  <testcase name="testCreateShoppingCartUserExists()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testDeleteShoppingCartItemNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.004"/>
+  <testcase name="testDeleteCartItemFromShoppingCart_ShoppingCartNotFound()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testCreateOrUpdateCartItemQuantityZero()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testDeleteShoppingCartNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.001"/>
+  <testcase name="testCreateOrUpdateCartItem()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.001"/>
+  <testcase name="testDeleteCartItemFromShoppingCart_ProductNotFound()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.002"/>
+  <testcase name="testGetShoppingCartInformationNotExist()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.003"/>
+  <testcase name="testCreateOrUpdateCartItemNegativeQuantity()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.005"/>
+  <testcase name="testDeleteShoppingCartItemExists()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.004"/>
+  <testcase name="testCreateOrUpdateCartItemNull()" classname="com.adpro.pembelian.service.CartServiceTest" time="0.004"/>
+  <system-out><![CDATA[null
+com.adpro.pembelian.model.dto.DTOCustomerDetails@1c7abdd4
+com.adpro.pembelian.model.dto.DTOCustomerDetails@6c8989e6
+com.adpro.pembelian.model.dto.DTOCustomerDetails@14a6996d
+null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

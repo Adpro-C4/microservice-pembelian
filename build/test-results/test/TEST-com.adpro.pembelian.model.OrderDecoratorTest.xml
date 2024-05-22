@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.model.OrderDecoratorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.011">
+  <properties/>
+  <testcase name="getAddress_ReturnsCorrectAddress()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.002"/>
+  <testcase name="getTotalPrice_WithVoucher_ReturnsCorrectTotalPrice()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.001"/>
+  <testcase name="getShippingMethod_ReturnsCorrectShippingMethod()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.0"/>
+  <testcase name="getCustomerDetails_ReturnsCorrectCustomerDetails()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.0"/>
+  <testcase name="getTimestamp_ReturnsCorrectTimestamp()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.002"/>
+  <testcase name="getUserId_ReturnsCorrectUserId()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.001"/>
+  <testcase name="getResi_ReturnsCorrectResi()" classname="com.adpro.pembelian.model.OrderDecoratorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
