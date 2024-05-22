@@ -2,11 +2,7 @@ name: Build and Test with Docker Compose
 
 on:
   push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -31,6 +27,8 @@ jobs:
         with:
           username: isaui
           password: Babiharam17
+     
+
 
       - name: Set up Docker Compose
         uses: hoverkraft-tech/compose-action@v1.5.1
