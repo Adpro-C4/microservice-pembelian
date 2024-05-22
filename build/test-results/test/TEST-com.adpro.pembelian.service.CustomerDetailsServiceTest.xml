@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.service.CustomerDetailsServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:14" hostname="ISA17" time="0.302">
+  <properties/>
+  <testcase name="testGetUserDetailsAPIUserNotFound()" classname="com.adpro.pembelian.service.CustomerDetailsServiceTest" time="0.232"/>
+  <testcase name="testGetUserDetailsAPIException()" classname="com.adpro.pembelian.service.CustomerDetailsServiceTest" time="0.005"/>
+  <testcase name="testGetUserDetailsAPI()" classname="com.adpro.pembelian.service.CustomerDetailsServiceTest" time="0.063"/>
+  <system-out><![CDATA[null
+java.lang.NullPointerException: Cannot invoke "com.fasterxml.jackson.databind.JsonNode.get(String)" because "node" is null
+java.lang.RuntimeException: API error
+{"data":{"user_detail":{"name":"John Doe","email":"john@example.com","phoneNumber":"1234567890","username":"johndoe","id":"123"}}}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

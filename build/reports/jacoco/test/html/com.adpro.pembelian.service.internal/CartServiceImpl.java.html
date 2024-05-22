@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CartServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.service.internal</a> &gt; <span class="el_source">CartServiceImpl.java</span></div><h1>CartServiceImpl.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.service.internal;
+
+import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
+import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
+import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
+import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.model.builder.CartItemBuilder;
+import com.adpro.pembelian.model.entity.ShoppingCartEntity;
+import com.adpro.pembelian.model.builder.ShoppingCartBuilder;
+import com.adpro.pembelian.repository.CartItemRepository;
+import com.adpro.pembelian.repository.ShoppingCartRepository;
+import com.adpro.pembelian.service.external.APICustomerDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+<span class="fc" id="L24">public class CartServiceImpl implements CartService {</span>
+    @Autowired
+    CartItemRepository cartItemRepository;
+
+    @Autowired
+    ShoppingCartRepository shoppingCartRepository;
+
+    @Autowired
+    APICustomerDetailsService customerDetailsService;
+
+    @Override
+    public CartItemEntity createOrUpdateCartItemToShoppingCart(DTOCartItemUpdateInformation cartInformation) {
+<span class="fc" id="L36">        validateQuantity(cartInformation.quantity());</span>
+
+<span class="fc" id="L38">        ShoppingCartEntity shoppingCart = findOrCreateShoppingCart(cartInformation.userId());</span>
+<span class="fc" id="L39">        CartItemEntity item = findOrCreateCartItem(shoppingCart, cartInformation);</span>
+<span class="fc" id="L40">        updateCartItem(item, cartInformation);</span>
+<span class="fc" id="L41">        shoppingCartRepository.save(shoppingCart);</span>
+<span class="fc" id="L42">        return item;</span>
+    }
+
+    private void validateQuantity(String quantity) {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (Long.parseLong(quantity) &lt;= 0) {</span>
+<span class="fc" id="L47">            throw new IllegalArgumentException(&quot;Quantity harus bilangan positif&quot;);</span>
+        }
+<span class="fc" id="L49">    }</span>
+
+    private ShoppingCartEntity findOrCreateShoppingCart(String userId) {
+<span class="fc" id="L52">        ShoppingCartEntity shoppingCart = getShoppingCart(userId);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (shoppingCart == null) {</span>
+<span class="fc" id="L54">            createShoppingCart(userId);</span>
+<span class="fc" id="L55">            shoppingCart = getShoppingCart(userId);</span>
+        }
+<span class="fc" id="L57">        return shoppingCart;</span>
+    }
+
+    public CartItemEntity findOrCreateCartItem(ShoppingCartEntity shoppingCart, DTOCartItemUpdateInformation cartInformation) {
+<span class="fc" id="L61">        CartItemEntity item = shoppingCart.getCartItemMap().get(cartInformation.productId());</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (item == null) {</span>
+<span class="fc" id="L63">            item = createCartItem(cartInformation);</span>
+<span class="fc" id="L64">            shoppingCart.getCartItemMap().put(cartInformation.productId(), item);</span>
+<span class="fc" id="L65">            item.setShoppingCart(shoppingCart);</span>
+        }
+<span class="fc" id="L67">        return item;</span>
+    }
+
+    private CartItemEntity createCartItem(DTOCartItemUpdateInformation cartInformation) {
+<span class="fc" id="L71">        return new CartItemBuilder()</span>
+<span class="fc" id="L72">                .withName(cartInformation.name())</span>
+<span class="fc" id="L73">                .withPrice(Double.parseDouble(cartInformation.price()))</span>
+<span class="fc" id="L74">                .withProductId(cartInformation.productId())</span>
+<span class="fc" id="L75">                .withQuantity(Integer.parseInt(cartInformation.quantity()))</span>
+<span class="fc" id="L76">                .build();</span>
+    }
+
+    private void updateCartItem(CartItemEntity item, DTOCartItemUpdateInformation cartInformation) {
+<span class="fc" id="L80">        item.setQuantity(Integer.parseInt(cartInformation.quantity()));</span>
+<span class="fc" id="L81">        item.setName(cartInformation.name());</span>
+<span class="fc" id="L82">        item.setPrice(Double.parseDouble(cartInformation.price()));</span>
+<span class="fc" id="L83">    }</span>
+
+    @Override
+    public void deleteCartItemFromShoppingCart(DTOCartItemDeletionInformation information) {
+<span class="fc" id="L87">        ShoppingCartEntity shoppingCart = getShoppingCart(information.userId());</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if(shoppingCart == null){</span>
+<span class="fc" id="L89">            throw new NoSuchElementException();</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if(! shoppingCart.getCartItemMap().containsKey(information.productId())){</span>
+<span class="fc" id="L92">            throw new NoSuchElementException();</span>
+        }
+<span class="fc" id="L94">        shoppingCart.getCartItemMap().remove(information.productId());</span>
+<span class="fc" id="L95">        shoppingCartRepository.save(shoppingCart);</span>
+<span class="fc" id="L96">    }</span>
+    @Override
+    public List&lt;CartItemEntity&gt; getCartItemsFromShoppingCart(String userId) {
+<span class="fc" id="L99">        ShoppingCartEntity shoppingCart = getShoppingCart(userId);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if(shoppingCart == null){</span>
+<span class="fc" id="L101">            throw new RuntimeException(&quot;Tidak ada shopping cart yang berasosiasi dengan user dengan id &quot;+ userId);</span>
+        }
+<span class="fc" id="L103">        return new ArrayList&lt;&gt;(shoppingCart.getCartItemMap().values());</span>
+    }
+
+    @Override
+    public ShoppingCartEntity getShoppingCart(String userId){
+<span class="fc" id="L108">        return  shoppingCartRepository.findById(Long.parseLong(userId)).orElse(null);</span>
+    }
+
+    @Override
+    public DTOShoppingCartInformation getShoppingCartInformation(String userId) {
+<span class="fc" id="L113">        ShoppingCartEntity shoppingCart = getShoppingCart(userId);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if(shoppingCart == null) {</span>
+<span class="fc" id="L115">            throw new NoSuchElementException(&quot;Tidak ada shopping cart yang berasosiasi dengan id&quot; + userId);</span>
+        }
+<span class="fc" id="L117">        return new DTOShoppingCartInformation(shoppingCart.calculateTotalPrice(),</span>
+<span class="fc" id="L118">                shoppingCart.getCartItemMap().values().stream().map(CartItemEntity::toDTO).toList(),</span>
+                userId);
+    }
+
+    @Override
+    public void deleteShoppingCart(String userId) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(getShoppingCart(userId) == null){</span>
+<span class="fc" id="L125">            throw new NoSuchElementException();</span>
+        }
+<span class="fc" id="L127">        shoppingCartRepository.deleteById(Long.valueOf(userId));</span>
+<span class="fc" id="L128">    }</span>
+
+    @Async
+    @Override
+    public CompletableFuture&lt;Void&gt; createShoppingCart(String userId) {
+<span class="fc" id="L133">        return CompletableFuture.supplyAsync(() -&gt; customerDetailsService.getUserDetailsAPI(userId))</span>
+<span class="fc" id="L134">            .thenApplyAsync(customerDetails -&gt; {</span>
+<span class="fc" id="L135">                System.out.println(customerDetails);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">                if (customerDetails == null) {</span>
+<span class="fc" id="L137">                    throw new NoSuchElementException();</span>
+                }
+<span class="fc" id="L139">                return getShoppingCart(userId);</span>
+            })
+<span class="fc" id="L141">            .thenAcceptAsync(cart -&gt; {</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                if (cart == null) {</span>
+<span class="fc" id="L143">                    shoppingCartRepository.save(</span>
+<span class="fc" id="L144">                            new ShoppingCartBuilder().withCartItems(new HashMap&lt;&gt;())</span>
+<span class="fc" id="L145">                                    .withUserId(Long.parseLong(userId)).build());</span>
+                }
+<span class="fc" id="L147">            });</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

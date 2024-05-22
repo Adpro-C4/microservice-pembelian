@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VoucherBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.model.builder</a> &gt; <span class="el_source">VoucherBuilder.java</span></div><h1>VoucherBuilder.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.model.builder;
+
+import com.adpro.pembelian.model.dto.DTOVoucher;
+
+<span class="fc" id="L5">public class VoucherBuilder {</span>
+    private Long voucherId;
+    private String voucherName;
+    private String voucherDescription;
+    private double voucherDiscount;
+    private Integer voucherQuota;
+
+    public VoucherBuilder voucherId(Long voucherId) {
+<span class="fc" id="L13">        this.voucherId = voucherId;</span>
+<span class="fc" id="L14">        return this;</span>
+    }
+
+    public VoucherBuilder voucherName(String voucherName) {
+<span class="fc" id="L18">        this.voucherName = voucherName;</span>
+<span class="fc" id="L19">        return this;</span>
+    }
+
+    public VoucherBuilder voucherDescription(String voucherDescription) {
+<span class="fc" id="L23">        this.voucherDescription = voucherDescription;</span>
+<span class="fc" id="L24">        return this;</span>
+    }
+
+    public VoucherBuilder voucherDiscount(double voucherDiscount) {
+<span class="fc" id="L28">        this.voucherDiscount = voucherDiscount;</span>
+<span class="fc" id="L29">        return this;</span>
+    }
+
+
+
+    public VoucherBuilder voucherQuota(Integer voucherQuota) {
+<span class="fc" id="L35">        this.voucherQuota = voucherQuota;</span>
+<span class="fc" id="L36">        return this;</span>
+    }
+
+    public DTOVoucher build() {
+<span class="fc" id="L40">        DTOVoucher voucher = new DTOVoucher();</span>
+<span class="fc" id="L41">        voucher.setVoucherId(this.voucherId);</span>
+<span class="fc" id="L42">        voucher.setVoucherName(this.voucherName);</span>
+<span class="fc" id="L43">        voucher.setVoucherDescription(this.voucherDescription);</span>
+<span class="fc" id="L44">        voucher.setVoucherDiscount(this.voucherDiscount);</span>
+<span class="fc" id="L45">        voucher.setVoucherQuota(this.voucherQuota);</span>
+<span class="fc" id="L46">        return voucher;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

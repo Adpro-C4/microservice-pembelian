@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIProductServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.service.external</a> &gt; <span class="el_source">APIProductServiceImpl.java</span></div><h1>APIProductServiceImpl.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.service.external;
+import com.adpro.pembelian.enums.ProductAPI;
+import com.adpro.pembelian.model.dto.DTOProduct;
+import com.adpro.pembelian.model.builder.ProductBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L12">@Service</span>
+<span class="fc" id="L13">public class APIProductServiceImpl implements APIProductService {</span>
+
+    @Autowired
+    private RestTemplate restTemplate;
+    @Override
+    public DTOProduct getProductFromAPI(String id) {
+<span class="fc" id="L19">        String url = ProductAPI.PRODUCT.getUrl()+&quot;/&quot;+id;</span>
+<span class="fc" id="L20">        JsonNode json = restTemplate.getForObject(url, JsonNode.class);</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        assert json != null;</span>
+<span class="fc" id="L22">        return  getProduct(json);</span>
+    }
+
+    public DTOProduct getProduct(JsonNode json){
+<span class="fc" id="L26">        ProductBuilder productBuilder = new ProductBuilder();</span>
+<span class="fc" id="L27">        productBuilder.withProductId(json.get(&quot;id&quot;).textValue())</span>
+<span class="fc" id="L28">                .withProductName(json.get(&quot;name&quot;).textValue())</span>
+<span class="fc" id="L29">                .withProductDescription(json.get(&quot;description&quot;).textValue())</span>
+<span class="fc" id="L30">                .withBrand(json.get(&quot;brand&quot;).textValue())</span>
+<span class="fc" id="L31">                .withProductPrice(json.get(&quot;price&quot;).asDouble())</span>
+<span class="fc" id="L32">                .withProductStock(json.get(&quot;quantity&quot;).asInt())</span>
+<span class="fc" id="L33">                .withProductThumbnail(json.get(&quot;image&quot;).textValue());</span>
+<span class="fc" id="L34">        return productBuilder.build();</span>
+    }
+
+    @Override
+    public List&lt;DTOProduct&gt; getAllProductFromAPI() {
+<span class="fc" id="L39">        String url = ProductAPI.ALL_PRODUCT.getUrl();</span>
+<span class="fc" id="L40">        List&lt;DTOProduct&gt; products = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L41">        JsonNode json = restTemplate.getForObject(url, JsonNode.class);</span>
+<span class="fc" id="L42">        System.out.println(json);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        assert json != null;</span>
+<span class="fc" id="L44">        json.forEach(data-&gt; {products.add(getProduct(data));});</span>
+<span class="fc" id="L45">        return  products;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

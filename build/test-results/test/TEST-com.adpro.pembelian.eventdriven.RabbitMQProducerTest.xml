@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.eventdriven.RabbitMQProducerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:12" hostname="ISA17" time="0.577">
+  <properties/>
+  <testcase name="testSendMessage()" classname="com.adpro.pembelian.eventdriven.RabbitMQProducerTest" time="0.577"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

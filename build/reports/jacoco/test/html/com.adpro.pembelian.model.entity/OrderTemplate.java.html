@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderTemplate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.model.entity</a> &gt; <span class="el_source">OrderTemplate.java</span></div><h1>OrderTemplate.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.model.entity;
+
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
+import com.adpro.pembelian.service.internal.PricingStrategy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.List;
+
+<span class="fc" id="L14">@Setter</span>
+@Getter
+@Entity
+@Table(name = &quot;ORDERS&quot;)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+<span class="fc" id="L19">public abstract class OrderTemplate implements Serializable {</span>
+<span class="fc" id="L20">    protected String userId;</span>
+<span class="fc" id="L21">    protected   String timestamp;</span>
+<span class="fc" id="L22">    protected String shippingMethod;</span>
+<span class="fc" id="L23">    protected String resi;</span>
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = &quot;userId&quot;, column = @Column(name = &quot;customer_userId&quot;))
+    })
+<span class="fc" id="L28">    protected DTOCustomerDetails customerDetails;</span>
+<span class="fc" id="L29">    protected String address;</span>
+    @OneToMany(mappedBy = &quot;order&quot;, cascade = CascadeType.ALL)
+    @JsonManagedReference
+<span class="fc" id="L32">    protected List&lt;CartItemEntity&gt; cartItems;</span>
+    @Transient
+    @JsonIgnore
+<span class="fc" id="L35">    protected PricingStrategy&lt;CartItemEntity&gt; strategy;</span>
+<span class="fc" id="L36">    protected String price;</span>
+    @Id
+<span class="fc" id="L38">    private String id;</span>
+    public abstract double getTotalPrice();
+
+    public  void setData(OrderTemplate orderTemplate){
+<span class="fc" id="L42">        setId(orderTemplate.getId());</span>
+<span class="fc" id="L43">        setShippingMethod(orderTemplate.getShippingMethod());</span>
+<span class="fc" id="L44">        setAddress(orderTemplate.getAddress());</span>
+<span class="fc" id="L45">        setResi(orderTemplate.getResi());</span>
+<span class="fc" id="L46">        setCartItems(orderTemplate.getCartItems());</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if(getCartItems() != null){</span>
+<span class="fc" id="L48">            getCartItems().forEach(cartItemEntity -&gt; cartItemEntity.setOrder(this));</span>
+        }
+<span class="fc" id="L50">        setCustomerDetails(orderTemplate.getCustomerDetails());</span>
+<span class="fc" id="L51">        setPrice(orderTemplate.getPrice());</span>
+<span class="fc" id="L52">        setTimestamp(orderTemplate.getTimestamp());</span>
+<span class="fc" id="L53">        setUserId(orderTemplate.getUserId());</span>
+<span class="fc" id="L54">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

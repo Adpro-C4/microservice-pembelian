@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CartController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.controller</a> &gt; <span class="el_source">CartController.java</span></div><h1>CartController.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.controller;
+
+import com.adpro.pembelian.common.ResponseHandler;
+import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
+import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
+import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
+import com.adpro.pembelian.model.entity.CartItemEntity;
+import com.adpro.pembelian.service.internal.CartService;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+@RestController
+@RequestMapping(&quot;/shopping-cart&quot;)
+<span class="fc" id="L20">public class CartController {</span>
+    @Autowired
+    CartService cartService;
+
+    @GetMapping(&quot;/data/{id}&quot;)
+    public ResponseEntity&lt;Object&gt; getShoppingCartInformation(@PathVariable String id){
+        try {
+<span class="fc" id="L27">            DTOShoppingCartInformation information = cartService.getShoppingCartInformation(id);</span>
+<span class="fc" id="L28">            Map&lt;String,Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L29">            String message = &quot;berhasil mendapatkan data shopping cart&quot;;</span>
+<span class="fc" id="L30">            response.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L31">            response.put(&quot;shoppingCart&quot;, information.dtoCartItemList());</span>
+<span class="fc" id="L32">            response.put(&quot;totalPrice&quot;, information.totalPrice());</span>
+<span class="fc" id="L33">            return  ResponseHandler.generateResponse(message,</span>
+                    HttpStatus.ACCEPTED, response);
+<span class="fc" id="L35">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L36">            return ResponseHandler.generateResponse(&quot;Data shopping cart tidak ditemukan!&quot;, HttpStatus.NOT_FOUND, e);</span>
+        }
+    }
+    @PostMapping(&quot;/update&quot;)
+    public ResponseEntity&lt;Object&gt; updateCartItemOnShoppingCart(@RequestBody DTOCartItemUpdateInformation cartItemUpdateInformation){
+        try{
+<span class="fc" id="L42">            CartItemEntity entity = cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);</span>
+<span class="fc" id="L43">            System.out.println(entity);</span>
+<span class="fc" id="L44">            Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L45">            String message = &quot;Sukses mengupdate cart item&quot;;</span>
+<span class="fc" id="L46">            response.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L47">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);</span>
+<span class="fc" id="L48">        }catch (NoSuchElementException exception){</span>
+<span class="fc" id="L49">            String message = &quot;Cart item tidak ditemukan&quot;;</span>
+<span class="fc" id="L50">            return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, exception);</span>
+        }
+    }
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    public ResponseEntity&lt;Object&gt; deleteCartItemFromShoppingCart(@RequestBody DTOCartItemDeletionInformation information){
+        try {
+<span class="fc" id="L56">            cartService.deleteCartItemFromShoppingCart(information);</span>
+<span class="fc" id="L57">            Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L58">            String message = &quot;Sukses menghapus cart item&quot;;</span>
+<span class="fc" id="L59">            response.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L60">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);</span>
+<span class="fc" id="L61">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L62">            return ResponseHandler.generateResponse(&quot;Cart Item yang akan dihapus rupanya tidak ada!&quot;, HttpStatus.NOT_FOUND, new HashMap&lt;&gt;());</span>
+        }
+    }
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;Object&gt; createShoppingCart(@RequestBody JsonNode node){
+        try{
+<span class="fc" id="L68">            String userId = node.get(&quot;userId&quot;).asText();</span>
+<span class="fc" id="L69">            cartService.createShoppingCart(userId);</span>
+<span class="fc" id="L70">            System.out.println(&quot;HELLO EVERYBODY&quot;);</span>
+<span class="fc" id="L71">            Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L72">            String message = &quot;Sukses membuat shopping cart untuk user &quot; +userId;</span>
+<span class="fc" id="L73">            response.put(&quot;message&quot;, message);</span>
+<span class="fc" id="L74">            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED,response);</span>
+<span class="fc" id="L75">        }catch (NoSuchElementException exception){</span>
+<span class="fc" id="L76">            return ResponseHandler.generateResponse(&quot;User tidak ditemukan!&quot;,</span>
+                    HttpStatus.INTERNAL_SERVER_ERROR, new HashMap&lt;&gt;());
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

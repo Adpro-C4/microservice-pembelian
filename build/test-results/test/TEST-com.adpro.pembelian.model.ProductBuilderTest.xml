@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.model.ProductBuilderTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.015">
+  <properties/>
+  <testcase name="testProductBuilder()" classname="com.adpro.pembelian.model.ProductBuilderTest" time="0.003"/>
+  <testcase name="testProductBuilderNegativePrice()" classname="com.adpro.pembelian.model.ProductBuilderTest" time="0.003"/>
+  <testcase name="testProductBuilderNegativeStock()" classname="com.adpro.pembelian.model.ProductBuilderTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderWithVoucherDecorator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pembelian</a> &gt; <a href="index.source.html" class="el_package">com.adpro.pembelian.model.decorator</a> &gt; <span class="el_source">OrderWithVoucherDecorator.java</span></div><h1>OrderWithVoucherDecorator.java</h1><pre class="source lang-java linenums">package com.adpro.pembelian.model.decorator;
+
+import com.adpro.pembelian.model.dto.DTOCustomerDetails;
+import com.adpro.pembelian.model.entity.OrderTemplate;
+import com.adpro.pembelian.model.dto.DTOVoucher;
+import jakarta.persistence.Embedded;
+import lombok.Getter;
+
+
+@Getter
+public class OrderWithVoucherDecorator extends OrderDecorator {
+    @Embedded
+<span class="fc" id="L13">    private DTOVoucher voucher;</span>
+
+    public OrderWithVoucherDecorator(OrderTemplate request, DTOVoucher voucher) {
+<span class="fc" id="L16">        super(request);</span>
+<span class="fc" id="L17">        this.voucher = voucher;</span>
+<span class="fc" id="L18">    }</span>
+
+<span class="fc" id="L20">    public OrderWithVoucherDecorator() {</span>
+
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public String getShippingMethod(){
+<span class="fc" id="L26">        return this.request.getShippingMethod();</span>
+    }
+
+    @Override
+    public String getResi() {
+        // TODO Auto-generated method stub
+<span class="fc" id="L32">        return this.request.getResi();</span>
+    }
+
+    @Override
+    public String getUserId() {
+<span class="fc" id="L37">        return this.request.getUserId();</span>
+    }
+
+    @Override
+    public String getTimestamp() {
+<span class="fc" id="L42">        return this.request.getTimestamp();</span>
+    }
+
+    @Override
+    public void setPrice(String price) {
+<span class="fc" id="L47">        this.request.setPrice(price);</span>
+<span class="fc" id="L48">    }</span>
+
+    @Override
+    public DTOCustomerDetails getCustomerDetails() {
+<span class="fc" id="L52">        return this.request.getCustomerDetails();</span>
+    }
+
+    @Override
+    public String getAddress() {
+<span class="fc" id="L57">        return this.request.getAddress();</span>
+    }
+
+    @Override
+    public double getTotalPrice() {
+<span class="fc" id="L62">        return this.request.getTotalPrice() - this.request.getTotalPrice() * voucher.getVoucherDiscount();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

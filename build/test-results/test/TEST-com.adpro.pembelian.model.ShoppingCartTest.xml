@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adpro.pembelian.model.ShoppingCartTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2024-05-22T09:12:13" hostname="ISA17" time="0.02">
+  <properties/>
+  <testcase name="testSetPricingStrategy()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testRemoveCartItemSuccess()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.004"/>
+  <testcase name="testCreateShoppingCart()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testUpdateCartItemFailed()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.003"/>
+  <testcase name="testGetEmptyShoppingCart()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.0"/>
+  <testcase name="testUpdateCartItemSuccess()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.0"/>
+  <testcase name="testRemoveCartItemFailed()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testGetPricingStrategy()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testAddCartItemSuccess()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testGetUserId()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.001"/>
+  <testcase name="testAddCartItemFailed()" classname="com.adpro.pembelian.model.ShoppingCartTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
