@@ -23,7 +23,7 @@ services:
     networks:
       - regenfass
   grafana:
-    image: grafana/grafana:9.5.2
+    image: grafana/grafana:9.5.19
     container_name: grafana
     ports:
       - "3000:3000"

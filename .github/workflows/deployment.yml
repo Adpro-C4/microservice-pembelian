@@ -1,10 +1,7 @@
 on:
     push:
-      branches:
-        - main
     pull_request:
-      branches:
-        - main
+      
 jobs:
     deploy:
       concurrency:
@@ -37,7 +34,7 @@ jobs:
         - name: Build and deploy the application
           uses: koyeb/action-git-deploy@v1
           with:
-            app-name: docker-compose-${{ github.ref_name }}
+            app-name: docker-compose-capek
             service-ports: "2000:http"
             service-routes: "/:2000"
             git-builder: docker
