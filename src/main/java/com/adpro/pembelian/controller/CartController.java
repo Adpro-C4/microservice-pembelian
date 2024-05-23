@@ -50,7 +50,7 @@ public class CartController {
             return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, exception);
         }
     }
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     public ResponseEntity<Object> deleteCartItemFromShoppingCart(@RequestBody DTOCartItemDeletionInformation information){
         try {
             cartService.deleteCartItemFromShoppingCart(information);
