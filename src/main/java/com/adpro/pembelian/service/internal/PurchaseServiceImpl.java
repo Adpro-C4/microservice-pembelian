@@ -41,6 +41,11 @@ public class PurchaseServiceImpl implements  PurchaseService {
     CartService cartService;
     @Autowired
     RabbitMQProducer rabbit;
+
+    @Override
+    public List<OrderTemplate> viewAllOrder() {
+        return orderRepository.findAll();
+    }
     
     @Async
     @Transactional
@@ -100,6 +105,8 @@ public class PurchaseServiceImpl implements  PurchaseService {
                 calculateTotalPrice(orderRequest.getCartItems())));
         return  request.voucherId() != null ? new OrderWithVoucherEntity(orderRequest, voucherService.getVoucher(request.voucherId())) : orderRequest;
     }
+
+    
 
     
 
@@ -174,5 +181,8 @@ public class PurchaseServiceImpl implements  PurchaseService {
     public void removePurchaseRequestByUserId(String userId) {
         orderRepository.deleteByUserId(userId);
     }
+
+
+    
 
 }

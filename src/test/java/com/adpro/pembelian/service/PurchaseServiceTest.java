@@ -3,6 +3,7 @@ package com.adpro.pembelian.service;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -50,7 +51,6 @@ import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import com.adpro.pembelian.service.external.APIVoucherService;
 import com.adpro.pembelian.service.internal.CartService;
 import com.adpro.pembelian.service.internal.PurchaseServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -91,6 +91,55 @@ public class PurchaseServiceTest {
          "voucher-1", "address-1", "Go-bek");
     }
 
+
+    @Test
+    void testViewAllOrder_NotEmpty() {
+        // Setup
+        OrdinaryOrderEntity order1 = new OrdinaryOrderEntity();
+        order1.setId("1");
+        order1.setUserId("user1");
+        order1.setShippingMethod("Standard");
+        order1.setResi("resi1");
+        order1.setAddress("Address 1");
+        order1.setPrice("100");
+
+        OrdinaryOrderEntity order2 = new OrdinaryOrderEntity();
+        order2.setId("2");
+        order2.setUserId("user2");
+        order2.setShippingMethod("Express");
+        order2.setResi("resi2");
+        order2.setAddress("Address 2");
+        order2.setPrice("200");
+
+        List<OrderTemplate> orders = Arrays.asList(order1, order2);
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        // Exercise
+        List<OrderTemplate> result = purchaseService.viewAllOrder();
+
+        // Verify
+        assertEquals(2, result.size());
+        assertEquals("1", result.get(0).getId());
+        assertEquals("user1", result.get(0).getUserId());
+        assertEquals("2", result.get(1).getId());
+        assertEquals("user2", result.get(1).getUserId());
+
+        verify(orderRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testViewAllOrder_Empty() {
+        // Setup
+        when(orderRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Exercise
+        List<OrderTemplate> result = purchaseService.viewAllOrder();
+
+        // Verify
+        assertTrue(result.isEmpty());
+
+        verify(orderRepository, times(1)).findAll();
+    }
     @Test
     void testCreatePurchaseRequest() throws ExecutionException, InterruptedException {
         DTOCustomerDetails customerDetails = new DTOCustomerDetails();

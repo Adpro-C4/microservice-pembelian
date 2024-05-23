@@ -1,5 +1,7 @@
 package com.adpro.pembelian.controller;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -10,6 +12,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.adpro.pembelian.model.dto.DTOPurchaseInformation;
+import com.adpro.pembelian.model.entity.OrderTemplate;
 import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
 import com.adpro.pembelian.service.internal.PurchaseService;
 
@@ -58,6 +64,60 @@ public class OrderControllerTest {
             System.out.println(err);
         }
     }
+
+    @Test
+    void testViewAllOrder_Success() {
+        // Setup
+        OrdinaryOrderEntity order1 = new OrdinaryOrderEntity();
+        order1.setId("1");
+        order1.setUserId("user1");
+        order1.setShippingMethod("Standard");
+        order1.setResi("resi1");
+        order1.setAddress("Address 1");
+        order1.setPrice("100");
+
+        List<OrderTemplate> orders = Arrays.asList(order1);
+        when(purchaseService.viewAllOrder()).thenReturn(orders);
+
+        // Exercise
+        ResponseEntity<Object> response = orderController.viewAllOrder();
+
+        // Verify
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        Map<String, Object> responseData = (Map<String, Object>) response.getBody();
+        assertNotNull(responseData);
+        Map<String, Object> data = (Map<String, Object>) responseData.get("data");
+        assertNotNull(data);
+        List<OrderTemplate> returnedOrders = (List<OrderTemplate>) data.get("orders");
+        assertEquals(1, returnedOrders.size());
+        assertEquals("1", returnedOrders.get(0).getId());
+        assertEquals("user1", returnedOrders.get(0).getUserId());
+
+        verify(purchaseService, times(1)).viewAllOrder();
+    }
+
+
+    @Test
+    void testViewAllOrder_Empty() {
+        // Setup
+        when(purchaseService.viewAllOrder()).thenReturn(Collections.emptyList());
+
+        // Exercise
+        ResponseEntity<Object> response = orderController.viewAllOrder();
+
+        // Verify
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        Map<String, Object> responseData = (Map<String, Object>) response.getBody();
+        assertNotNull(responseData);
+        Map<String, Object> data = (Map<String, Object>) responseData.get("data");
+        assertNotNull(data);
+        List<OrderTemplate> returnedOrders = (List<OrderTemplate>) data.get("orders");
+        assertNotNull(returnedOrders);
+        assertTrue(returnedOrders.isEmpty());
+
+        verify(purchaseService, times(1)).viewAllOrder();
+    }
+
 
 
     @Test
