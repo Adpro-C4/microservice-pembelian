@@ -12,4 +12,5 @@ public interface PurchaseService {
     OrderTemplate viewOrder(String orderId);
     void removePurchaseRequestByUserId(String userId);
     List<OrderTemplate> viewAllOrderByUserId(String userId);
+    List<OrderTemplate> viewAllOrder();
 }

@@ -34,6 +34,19 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/view")
+    ResponseEntity<Object>  viewAllOrder(){
+        try {
+            Map<String, Object> data = new HashMap<>();
+            String message = "Berhasil menampilkan semua order ";
+            data.put("orders", purchaseService.viewAllOrder());
+            data.put("message", message);
+            return ResponseHandler.generateResponse(message, HttpStatus.ACCEPTED, data);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, e);
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     ResponseEntity<Object> removeOrder(@PathVariable String id){
         try {
@@ -46,6 +59,7 @@ public class OrderController {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, e);
         }
     }
+
 
     @GetMapping("/view/user/{id}")
     ResponseEntity<Object>  viewUserOrders(@PathVariable String id ){
