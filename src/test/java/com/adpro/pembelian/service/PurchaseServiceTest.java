@@ -219,7 +219,6 @@ class PurchaseServiceTest {
         );
 
         when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
-        when(orderRepository.save(any())).thenReturn(new OrdinaryOrderEntity());
 
         assertDoesNotThrow(() -> {
             CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
