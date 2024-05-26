@@ -1,10 +1,12 @@
 package com.adpro.pembelian.model.dto;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
-public class DTOCartItem {
+public class DTOCartItem implements Serializable {
     private Long id;
     private String productId;
     private String name;

@@ -9,7 +9,7 @@ import com.adpro.pembelian.model.dto.DTOCartItem;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CartItemTest {
+class CartItemTest {
 
     @Test
     public void testBuildCartItem() {

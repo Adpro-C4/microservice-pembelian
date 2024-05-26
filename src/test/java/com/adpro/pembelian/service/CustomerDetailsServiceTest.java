@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class CustomerDetailsServiceTest {
+class CustomerDetailsServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
@@ -38,6 +38,7 @@ public class CustomerDetailsServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPI() {
         String userId = "123";
@@ -61,6 +62,7 @@ public class CustomerDetailsServiceTest {
         assertEquals(userId, customerDetails.getUserId());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPIUserNotFound() {
         String userId = "123";
@@ -73,6 +75,7 @@ public class CustomerDetailsServiceTest {
         verify(restTemplate, times(1)).getForEntity(anyString(), any(Class.class));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testGetUserDetailsAPIException() {
         String userId = "123";

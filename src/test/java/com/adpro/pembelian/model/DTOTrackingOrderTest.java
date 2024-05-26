@@ -6,7 +6,7 @@ import com.adpro.pembelian.model.dto.DTOTrackingOrder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DTOTrackingOrderTest {
+class DTOTrackingOrderTest {
     Long trackingId = 123L;
     String orderId = "ORD123";
     String method = "JTE";

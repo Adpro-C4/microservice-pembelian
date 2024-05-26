@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class ProductServiceTest {
+class ProductServiceTest {
 
     @Mock
     private RestTemplate restTemplate;

@@ -37,7 +37,7 @@ import com.adpro.pembelian.repository.ShoppingCartRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import com.adpro.pembelian.service.internal.CartServiceImpl;
 
-public class CartServiceTest {
+class CartServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
 

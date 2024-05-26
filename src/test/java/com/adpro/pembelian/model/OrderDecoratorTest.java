@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 
 
-public class OrderDecoratorTest {
+class OrderDecoratorTest {
 
     private OrderTemplate order;
     private DTOVoucher voucher;

@@ -6,7 +6,7 @@ import com.adpro.pembelian.model.dto.DTOCartItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class DTOCartItemTest {
+class DTOCartItemTest {
 
     @Test
     void testDTOCartItem() {

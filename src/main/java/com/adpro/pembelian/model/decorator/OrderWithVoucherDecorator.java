@@ -28,7 +28,6 @@ public class OrderWithVoucherDecorator extends OrderDecorator {
 
     @Override
     public String getResi() {
-        // TODO Auto-generated method stub
         return this.request.getResi();
     }
 

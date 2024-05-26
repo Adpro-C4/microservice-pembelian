@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProductBuilderTest {
+class ProductBuilderTest {
 
     @Test
     public void testProductBuilder() {

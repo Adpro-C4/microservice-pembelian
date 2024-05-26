@@ -3,7 +3,7 @@ import com.adpro.pembelian.model.dto.DTOCustomerDetails;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CustomerDetailsTest {
+class CustomerDetailsTest {
 
     @Test
     public void testConstructorAndGetters() {
