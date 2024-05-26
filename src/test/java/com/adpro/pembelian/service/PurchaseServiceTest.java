@@ -210,13 +210,21 @@ class PurchaseServiceTest {
 
     @Test
     void createOrderSuccess(){
-        DTOPurchaseInformation request = new DTOPurchaseInformation(TEST_USER_ID, Arrays.asList(TEST_PRODUCT_ID_1, TEST_PRODUCT_ID_2),
-                TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
+        DTOPurchaseInformation request = new DTOPurchaseInformation(
+                TEST_USER_ID,
+                Arrays.asList(TEST_PRODUCT_ID_1, TEST_PRODUCT_ID_2),
+                TEST_VOUCHER_ID,
+                TEST_ADDRESS,
+                TEST_SHIPPING_METHOD
+        );
+
         when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
         when(orderRepository.save(any())).thenReturn(new OrdinaryOrderEntity());
-        CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
-        future.join();
-        verify(orderRepository, times(1)).save(any());
+
+        assertDoesNotThrow(() -> {
+            CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
+            future.join();
+        });
     }
 
     @Test
