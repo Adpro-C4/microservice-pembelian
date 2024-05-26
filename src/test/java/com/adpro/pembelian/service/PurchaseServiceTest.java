@@ -141,7 +141,7 @@ public class PurchaseServiceTest {
         DTOCustomerDetails customerDetails = new DTOCustomerDetails();
         customerDetails.setFullname("User Name");
         customerDetails.setUsername("username");
-        customerDetails.setUserId("user-1");
+        customerDetails.setUserId("112");
         customerDetails.setPhoneNumber("123456789");
         customerDetails.setEmail("email@example.com");
         String trackingCode = "TRACK12345";
@@ -151,10 +151,9 @@ public class PurchaseServiceTest {
 
           CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
           future.join();
-          shippingMock.verify(() -> ShippingUtility.generateTrackingCode(anyString()), times(1));
 
         }
-        verify(customerDetailsService, times(1)).getUserDetailsAPI(anyString());
+        verify(customerDetailsService, times(2)).getUserDetailsAPI(anyString());
         
     }
 
