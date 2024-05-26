@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ProductBuilderTest {
 
     @Test
-    public void testProductBuilder() {
+    void testProductBuilder() {
         // Arrange
         String productId = "123";
         String productName = "Test Product";
@@ -37,7 +37,7 @@ class ProductBuilderTest {
     }
 
     @Test
-    public void testProductBuilderNegativePrice() {
+    void testProductBuilderNegativePrice() {
         // Arrange
         double productPrice = -99.99;
 
@@ -50,7 +50,7 @@ class ProductBuilderTest {
 
 
     @Test
-    public void testProductBuilderNegativeStock() {
+    void testProductBuilderNegativeStock() {
         // Arrange
         int productStock = -10;
 

@@ -14,13 +14,13 @@ class ShoppingCartTest {
     private ShoppingCartEntity shoppingCart;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         shoppingCart = new ShoppingCartEntity();
         shoppingCart.setUserId(123L);
     }
 
     @Test
-    public void testSetPricingStrategy() {
+    void testSetPricingStrategy() {
         PricingStrategy<CartItemEntity> newStrategy = items -> items.stream().mapToDouble(CartItemEntity::calculateTotalPrice).sum();
         shoppingCart.setPricingStrategy(newStrategy);
 
@@ -29,12 +29,12 @@ class ShoppingCartTest {
     }
 
     @Test
-    public void testGetUserId() {
+    void testGetUserId() {
         assertEquals(123L, shoppingCart.getUserId());
     }
 
     @Test
-    public void testGetPricingStrategy() {
+    void testGetPricingStrategy() {
         PricingStrategy<CartItemEntity> defaultStrategy = new CartPricingStrategy();
         assertEquals(defaultStrategy.getClass(), shoppingCart.getPricingStrategy().getClass());
     }
