@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomerDetailsTest {
 
     @Test
-    public void testConstructorAndGetters() {
+    void testConstructorAndGetters() {
         // Arrange
         String fullname = "John Doe";
         String username = "johndoe";
@@ -31,7 +31,7 @@ class CustomerDetailsTest {
     }
 
     @Test
-    public void testSetters() {
+    void testSetters() {
         // Arrange
         DTOCustomerDetails customer = new DTOCustomerDetails();
 
@@ -42,7 +42,6 @@ class CustomerDetailsTest {
         customer.setPhoneNumber("9876543210");
         customer.setEmail("janedoe@example.com");
 
-        // Assert
         assertEquals("Jane Doe", customer.getFullname());
         assertEquals("janedoe", customer.getUsername());
         assertEquals("654321", customer.getUserId());
@@ -50,5 +49,5 @@ class CustomerDetailsTest {
         assertEquals("janedoe@example.com", customer.getEmail());
     }
 
-    // Add more test cases as needed
+  
 }

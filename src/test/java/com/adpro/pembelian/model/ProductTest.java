@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class ProductTest {
 
     @Test
-    public void testProductGetterSetter() {
+    void testProductGetterSetter() {
         // Arrange
         DTOProduct product = new DTOProduct();
         String productId = "123";
@@ -36,7 +36,7 @@ class ProductTest {
     }
 
     @Test
-    public void testProductStockZero() {
+    void testProductStockZero() {
         // Arrange
         DTOProduct product = new DTOProduct();
         int productStock = 0;
@@ -47,7 +47,7 @@ class ProductTest {
     }
 
     @Test
-    public void testProductStockNegative() {
+    void testProductStockNegative() {
         // Arrange
         DTOProduct product = new DTOProduct();
         int productStock = -10;
@@ -58,7 +58,7 @@ class ProductTest {
     }
 
     @Test
-    public void testProductStockPositive() {
+    void testProductStockPositive() {
         // Arrange
         DTOProduct product = new DTOProduct();
         int productStock = 50;
@@ -69,7 +69,7 @@ class ProductTest {
     }
 
     @Test
-    public void testProductPricePositive() {
+    void testProductPricePositive() {
         // Arrange
         DTOProduct product = new DTOProduct();
         double productPrice = 99.99;
@@ -82,7 +82,7 @@ class ProductTest {
     }
 
     @Test
-    public void testProductPriceNegative() {
+    void testProductPriceNegative() {
         // Arrange
         DTOProduct product = new DTOProduct();
         double productPrice = -10.50;

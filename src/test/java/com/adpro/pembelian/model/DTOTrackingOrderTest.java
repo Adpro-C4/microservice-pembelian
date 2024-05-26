@@ -36,10 +36,6 @@ class DTOTrackingOrderTest {
 
     @Test
     void testDTOTrackingOrderToString() {
-        Long trackingId = 123L;
-        String orderId = "ORD123";
-        String method = "JTE";
-        String resiCode = "JTE-1234567890";
 
         DTOTrackingOrder dtoTrackingOrder = DTOTrackingOrder.builder()
                 .trackingId(trackingId)

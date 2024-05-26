@@ -29,7 +29,7 @@ class ProductServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetProductFromAPI() {
+    void testGetProductFromAPI() {
 
         String id = "1";
         JsonNode jsonNode = createSampleJsonNode();
@@ -44,7 +44,7 @@ class ProductServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetAllProductFromAPI() {
+    void testGetAllProductFromAPI() {
         JsonNode jsonNode = createSampleJsonNode();
         JsonNode jsonArray = new ObjectMapper().createArrayNode().add(jsonNode);
 
@@ -57,7 +57,7 @@ class ProductServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetProductFromAPINotFound() {
+    void testGetProductFromAPINotFound() {
         String id = "1";
 
      
@@ -74,7 +74,7 @@ class ProductServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetAllProductFromAPINotFound() {
+    void testGetAllProductFromAPINotFound() {
    
         when(restTemplate.getForObject(any(String.class), any(Class.class))).thenReturn(null);
 

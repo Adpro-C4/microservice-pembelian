@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CartItemTest {
 
     @Test
-    public void testBuildCartItem() {
+    void testBuildCartItem() {
 
         Long id = 1L;
         String productId = "ABC123";
@@ -37,7 +37,7 @@ class CartItemTest {
 
 
     @Test
-    public void testSetNegativePrice(){
+    void testSetNegativePrice(){
         CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setPrice(-3);
@@ -45,14 +45,14 @@ class CartItemTest {
     }
 
     @Test
-    public void testSetPositivePrice(){
+    void testSetPositivePrice(){
         CartItemEntity cartItem = new CartItemEntity();
         cartItem.setPrice(2000);
         assertEquals(2000, cartItem.getPrice() );
     }
 
     @Test
-    public  void testZeroPrice(){
+    void testZeroPrice(){
         CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(0);
@@ -60,7 +60,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testCalculateTotalPrice() {
+    void testCalculateTotalPrice() {
 
         CartItemEntity cartItem = new CartItemEntity();
         cartItem.setProductId("123");
@@ -71,7 +71,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testSetNegativeQuantity() {
+    void testSetNegativeQuantity() {
         CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(-3);
@@ -79,7 +79,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testSetZeroQuantity() {
+    void testSetZeroQuantity() {
         CartItemEntity cartItem = new CartItemEntity();
         assertThrows(IllegalArgumentException.class, () -> {
             cartItem.setQuantity(0);
@@ -87,7 +87,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testToDTO() {
+    void testToDTO() {
         CartItemEntity cartItem = new CartItemEntity(1L, "P123", "Product 1", 2, 100.0);
         DTOCartItem dto = cartItem.toDTO();
 
@@ -99,7 +99,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testFromDTO() {
+    void testFromDTO() {
         DTOCartItem dto = new DTOCartItem();
         dto.setId(1L);
         dto.setProductId("P123");
@@ -117,7 +117,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testParameterizedConstructor() {
+    void testParameterizedConstructor() {
         Long id = 1L;
         String productId = "P123";
         String name = "Product 1";
@@ -133,8 +133,8 @@ class CartItemTest {
         assertEquals(price, cartItem.getPrice(), 0.01);
     }
 
-        @Test
-    public void testOrderAssociation() {
+    @Test
+    void testOrderAssociation() {
         OrderTemplate order = new OrderWithVoucherEntity();
         CartItemEntity cartItem = new CartItemEntity();
         cartItem.setOrder(order);
@@ -143,7 +143,7 @@ class CartItemTest {
     }
 
     @Test
-    public void testShoppingCartAssociation() {
+    void testShoppingCartAssociation() {
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         CartItemEntity cartItem = new CartItemEntity();
         cartItem.setShoppingCart(shoppingCart);

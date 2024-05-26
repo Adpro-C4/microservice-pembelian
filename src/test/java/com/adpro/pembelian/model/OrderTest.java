@@ -24,7 +24,7 @@ class OrderTest {
     private DTOVoucher voucher;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         voucher = new DTOVoucher();
         voucher.setVoucherId(1L);
@@ -61,7 +61,7 @@ class OrderTest {
     }
 
     @Test
-    public void testGetTotalPrice() {
+    void testGetTotalPrice() {
         CartItemEntity item1 = new CartItemEntity(1L, "P1", "Product 1", 2, 50.0);
         CartItemEntity item2 = new CartItemEntity(2L, "P2", "Product 2", 3, 30.0);
         List<CartItemEntity> cartItems = new ArrayList<>();
@@ -75,7 +75,7 @@ class OrderTest {
     }
 
     @Test
-    public void testGetDecorator() {
+    void testGetDecorator() {
         OrderWithVoucherDecorator decorator = orderWithVoucher.getDecorator();
         assertNotNull(decorator);
         assertEquals(orderWithVoucher.getId(), decorator.getId());
@@ -83,12 +83,12 @@ class OrderTest {
     }
 
     @Test
-    public void testGetVoucher() {
+    void testGetVoucher() {
         assertEquals(voucher, orderWithVoucher.getVoucher());
     }
 
     @Test
-    public void testOrderWithVoucherConstructor() {
+    void testOrderWithVoucherConstructor() {
         OrderTemplate ordinaryOrder = new OrdinaryOrderEntity();
         DTOCustomerDetails customerDetails = new DTOCustomerDetails();
         customerDetails.setFullname("John Doe");
@@ -118,7 +118,7 @@ class OrderTest {
     }
 
     @Test
-    public void testSetData() {
+    void testSetData() {
         order2.setData(order1);
 
         assertEquals(order1.getId(), order2.getId());
@@ -139,7 +139,7 @@ class OrderTest {
     }
 
     @Test
-    public void testSetStrategy() {
+    void testSetStrategy() {
         CartPricingStrategy newStrategy = new CartPricingStrategy();
         order1.setStrategy(newStrategy);
 
@@ -148,7 +148,7 @@ class OrderTest {
     }
 
     @Test
-    public void testOrdinaryPurchaseRequestTotalPrice() {
+    void testOrdinaryPurchaseRequestTotalPrice() {
         // Create a sample cart with items
         List<CartItemEntity> cartItems = new ArrayList<>();
         cartItems.add(new CartItemEntity(1L, "prod1", "Product 1", 1, 10.0));
@@ -163,7 +163,7 @@ class OrderTest {
     }
 
     @Test
-    public void testPurchaseRequestWithVoucherTotalPrice() {
+    void testPurchaseRequestWithVoucherTotalPrice() {
         // Create a sample cart with items
         List<CartItemEntity> cartItems = new ArrayList<>();
         cartItems.add(new CartItemEntity(1L, "prod1", "Product 1", 1, 10.0));
