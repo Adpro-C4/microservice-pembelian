@@ -11,7 +11,6 @@ import com.adpro.pembelian.model.dto.*;
 import com.adpro.pembelian.repository.OrderRepository;
 import com.adpro.pembelian.service.external.APICustomerDetailsService;
 import com.adpro.pembelian.service.external.APIVoucherService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
@@ -19,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -63,11 +60,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
 
         customerDetailsFuture.join();
         String resi = resiFuture.join();
-
-        System.out.println("ini resi kamu: " + resi);
         OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetailsFuture.join(), resi);
-        System.out.println("order request: " + orderRequest);
-        System.out.println("HINDARI DEADLOCK");
         CompletableFuture.runAsync(() -> {
             sendTrackingOrder(orderRequest);
         });
@@ -140,7 +133,6 @@ public class PurchaseServiceImpl implements  PurchaseService {
         .resiCode("auto")
         .build();
             rabbit.sendMessage("tracking-order-routing-key", new ObjectMapper().writeValueAsString(trackingOrder));
-            System.out.println("HEHEHE");
         } catch (Exception e) {
             
         }
