@@ -68,7 +68,7 @@ public class PurchaseServiceImpl implements  PurchaseService {
         CompletableFuture.runAsync(() -> {
             saveOrder(orderRequest);
         });
-        return  null;
+        return CompletableFuture.completedFuture(null);
     }
 
 
