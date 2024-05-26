@@ -45,14 +45,14 @@ class DTOCartItemTest {
 
         // Test equals method
         assertEquals(dtoCartItem1, dtoCartItem2);
-        assertNotEquals(dtoCartItem1, null); // Non-nullity
+        assertNotEquals(null, dtoCartItem1); // Non-nullity
         assertNotEquals(dtoCartItem1, new Object()); // Comparison to an object of a different class
 
         // Test hashCode method
         assertEquals(dtoCartItem1.hashCode(), dtoCartItem2.hashCode());
         assertEquals(false, dtoCartItem1.equals(dtoCartItem3));
         // Test canEqual method
-        assertEquals(dtoCartItem1.equals(dtoCartItem2), true);
+        assertEquals(true, dtoCartItem1.equals(dtoCartItem2));
     }
 }
 

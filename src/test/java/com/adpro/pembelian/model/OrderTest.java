@@ -164,23 +164,19 @@ class OrderTest {
 
     @Test
     void testPurchaseRequestWithVoucherTotalPrice() {
-        // Create a sample cart with items
         List<CartItemEntity> cartItems = new ArrayList<>();
         cartItems.add(new CartItemEntity(1L, "prod1", "Product 1", 1, 10.0));
         cartItems.add(new CartItemEntity(2L, "prod2", "Product 2", 1, 20.0));
 
-        // Create an ordinary purchase request
         OrdinaryOrderEntity ordinaryRequest = new OrdinaryOrderEntity();
         ordinaryRequest.setCartItems(cartItems);
 
-        // Create a voucher
-        DTOVoucher voucher = new DTOVoucher();
-        voucher.setVoucherDiscount(0.1); // 10% discount
 
-        // Create a purchase request with voucher
-        OrderWithVoucherDecorator requestWithVoucher = new OrderWithVoucherDecorator(ordinaryRequest, voucher);
+        DTOVoucher vc = new DTOVoucher();
+        vc.setVoucherDiscount(0.1); 
 
-        // Check if the total price is calculated correctly with the voucher applied
+        OrderWithVoucherDecorator requestWithVoucher = new OrderWithVoucherDecorator(ordinaryRequest, vc);
+
         assertEquals(27.0, requestWithVoucher.getTotalPrice());
     }
 }

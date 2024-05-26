@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class ShippingUtility {
 
+    private static Random random = new Random();
+
     public static String generateTrackingCode(String shippingMethod) {
         switch (shippingMethod) {
             case "JTE":
@@ -44,7 +46,6 @@ public class ShippingUtility {
 
     private static String generateRandomUpperCaseLetters(int length) {
         // Generate random uppercase letters string with specified length
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             char randomChar = (char) (random.nextInt(26) + 'A');
@@ -55,7 +56,6 @@ public class ShippingUtility {
 
     private static String generateRandomDigits(int length) {
         // Generate random digits string with specified length
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             sb.append(random.nextInt(10));

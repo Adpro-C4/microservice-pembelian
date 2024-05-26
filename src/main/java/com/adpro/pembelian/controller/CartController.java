@@ -4,7 +4,6 @@ import com.adpro.pembelian.common.ResponseHandler;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOShoppingCartInformation;
-import com.adpro.pembelian.model.entity.CartItemEntity;
 import com.adpro.pembelian.service.internal.CartService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +38,7 @@ public class CartController {
     @PostMapping("/update")
     public ResponseEntity<Object> updateCartItemOnShoppingCart(@RequestBody DTOCartItemUpdateInformation cartItemUpdateInformation){
         try{
-            CartItemEntity entity = cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);
-            System.out.println(entity);
+            cartService.createOrUpdateCartItemToShoppingCart(cartItemUpdateInformation);
             Map<String, Object> response = new HashMap<>();
             String message = "Sukses mengupdate cart item";
             response.put("message", message);
@@ -67,7 +65,6 @@ public class CartController {
         try{
             String userId = node.get("userId").asText();
             cartService.createShoppingCart(userId);
-            System.out.println("HELLO EVERYBODY");
             Map<String, Object> response = new HashMap<>();
             String message = "Sukses membuat shopping cart untuk user " +userId;
             response.put("message", message);
