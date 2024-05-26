@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,8 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.adpro.pembelian.model.builder.ShoppingCartBuilder;
 import com.adpro.pembelian.model.dto.DTOCartItemDeletionInformation;
 import com.adpro.pembelian.model.dto.DTOCartItemUpdateInformation;
 import com.adpro.pembelian.model.dto.DTOCustomerDetails;
@@ -87,44 +83,26 @@ public class CartServiceTest {
     
     @Test
     void testCreateShoppingCart_CartIsNull() throws InterruptedException, ExecutionException, TimeoutException {
-        // Mock data
         String userId = "12";  
-        // Mock behavior
         when(customerDetailsService.getUserDetailsAPI(userId)).thenReturn(new DTOCustomerDetails());
         when(shoppingCartRepository.save(any())).thenReturn(null);
-        
-        // Call the method under test
         CompletableFuture<Void> future = cartService.createShoppingCart(userId);
-        
-        // Wait for the asynchronous operations to complete
         future.get(5, TimeUnit.SECONDS);
-
-        // Verify behavior
         verify(customerDetailsService, times(1)).getUserDetailsAPI(userId);
-        verify(shoppingCartRepository, times(1)).save(any());
-
-      
-       
+        verify(shoppingCartRepository, times(1)).save(any()); 
     }
 
     @Test
-    void testCreateShoppingCart_CartDoesNotExist() {
-        // Mock data
+    void testCreateShoppingCart_CartDoesNotExist() throws InterruptedException, ExecutionException {
         String userId = "122";
-
-        // Mock behavior
-        when(customerDetailsService.getUserDetailsAPI(userId)).thenReturn(new DTOCustomerDetails());
+        when(customerDetailsService.getUserDetailsAPI(userId)).thenReturn(null);
         when(shoppingCartRepository.save(any())).thenReturn(null);
-
-        // Call the method under test
-        CompletableFuture<Void> future = cartService.createShoppingCart(userId);
-
-     
-        
-
-        // Ensure the future completes without exceptions
-        future.join();
+        CompletableFuture<Void> future = cartService.createShoppingCart(userId);       
+        assertThrows(ExecutionException.class, future::get, "NoSuchElementException expected");
+        verify(customerDetailsService, times(1)).getUserDetailsAPI(userId);
+        verify(shoppingCartRepository, times(0)).save(any());
     }
+
 
     @Test
     void testCreateOrUpdateCartItem() {
