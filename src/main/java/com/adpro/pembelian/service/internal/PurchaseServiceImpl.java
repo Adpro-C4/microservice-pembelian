@@ -51,23 +51,15 @@ public class PurchaseServiceImpl implements  PurchaseService {
         Instant timestamp = Instant.now();
         String iso8601Timestamp = timestamp.toString();
 
-        CompletableFuture<DTOCustomerDetails> customerDetailsFuture = CompletableFuture.supplyAsync(() -> {
-            return getCustomerDetails(request.userId());
-        });
-        CompletableFuture<String> resiFuture = CompletableFuture.supplyAsync(() -> {
-            return ShippingUtility.generateTrackingCode(request.shippingMethod());
-        });
+        CompletableFuture<DTOCustomerDetails> customerDetailsFuture = CompletableFuture.supplyAsync(() ->  getCustomerDetails(request.userId()));
+        CompletableFuture<String> resiFuture = CompletableFuture.supplyAsync(() -> ShippingUtility.generateTrackingCode(request.shippingMethod()));
 
         customerDetailsFuture.join();
         String resi = resiFuture.join();
         OrderTemplate orderRequest = buildOrderRequest(request, iso8601Timestamp, customerDetailsFuture.join(), resi);
-        CompletableFuture.runAsync(() -> {
-            sendTrackingOrder(orderRequest);
-        });
+        CompletableFuture.runAsync(() -> sendTrackingOrder(orderRequest));
 
-        CompletableFuture.runAsync(() -> {
-            saveOrder(orderRequest);
-        });
+        CompletableFuture.runAsync(() -> saveOrder(orderRequest));
         return CompletableFuture.completedFuture(null);
     }
 

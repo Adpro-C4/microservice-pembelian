@@ -7,7 +7,7 @@ import com.adpro.pembelian.model.dto.DTOProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DTOProductTest {
+class DTOProductTest {
 
     @Test
     void testParameterizedConstructorAndGetters() {

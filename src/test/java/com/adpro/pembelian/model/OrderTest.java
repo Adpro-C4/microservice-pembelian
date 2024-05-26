@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OrderTest {
+class OrderTest {
     private OrdinaryOrderEntity order1;
     private OrdinaryOrderEntity order2;
     private OrderWithVoucherEntity orderWithVoucher;

@@ -9,7 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import static org.mockito.Mockito.*;
 
-public class RabbitMQProducerTest {
+class RabbitMQProducerTest {
 
     @Mock
     private RabbitTemplate rabbitTemplate;

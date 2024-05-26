@@ -41,7 +41,7 @@ public class APIProductServiceImpl implements APIProductService {
         JsonNode json = restTemplate.getForObject(url, JsonNode.class);
         System.out.println(json);
         assert json != null;
-        json.forEach(data-> {products.add(getProduct(data));});
+        json.forEach(data-> products.add(getProduct(data)));
         return  products;
     }
 }

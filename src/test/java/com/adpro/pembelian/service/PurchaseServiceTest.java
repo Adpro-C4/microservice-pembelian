@@ -51,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class PurchaseServiceTest {
+class PurchaseServiceTest {
 
     
     @Mock
@@ -214,8 +214,8 @@ public class PurchaseServiceTest {
                 TEST_VOUCHER_ID, TEST_ADDRESS, TEST_SHIPPING_METHOD);
         when(customerDetailsService.getUserDetailsAPI(anyString())).thenReturn(new DTOCustomerDetails());
         CompletableFuture<Void> future = purchaseService.createPurchaseRequest(request);
-       // future.join();
-       // verify(orderRepository, times(1)).save(any());
+        future.join();
+        verify(orderRepository, times(1)).save(any());
     }
 
     @Test

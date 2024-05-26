@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.adpro.pembelian.model.dto.DTOProduct;
 import org.junit.jupiter.api.Test;
 
-public class ProductTest {
+class ProductTest {
 
     @Test
     public void testProductGetterSetter() {

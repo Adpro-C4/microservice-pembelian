@@ -1,8 +1,6 @@
 package com.adpro.pembelian.service;
 
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,7 @@ import com.adpro.pembelian.enums.ProductAPI;
 import com.adpro.pembelian.model.dto.DTOVoucher;
 import com.adpro.pembelian.service.external.APIVoucherServiceImpl;
 
-public class APIVoucherServiceImplTest {
+class APIVoucherServiceImplTest {
 
     @Mock
     private DTOVoucher mockVoucher;

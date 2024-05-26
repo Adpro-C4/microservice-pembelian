@@ -31,7 +31,7 @@ import com.adpro.pembelian.model.entity.OrderTemplate;
 import com.adpro.pembelian.model.entity.OrdinaryOrderEntity;
 import com.adpro.pembelian.service.internal.PurchaseService;
 
-public class OrderControllerTest {
+class OrderControllerTest {
     final DTOPurchaseInformation purchaseInformationValid = new DTOPurchaseInformation("TEST", 
     new ArrayList<>(Arrays.asList("11,44,22".split(","))), 
     "1", "Depok, Jawa Barat", "JTE");
@@ -65,6 +65,7 @@ public class OrderControllerTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testViewAllOrder_Success() {
         // Setup
@@ -97,6 +98,7 @@ public class OrderControllerTest {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Test
     void testViewAllOrder_Empty() {
         // Setup
